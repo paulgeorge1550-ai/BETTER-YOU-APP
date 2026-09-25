@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>BetterNation — Transform Completely</title>
+<title>Better You — Transform Completely</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
 /* ══════════════════════════════════════
@@ -256,10 +256,6 @@ footer{
 .hero-desc{font-size:16px;color:var(--txt2);line-height:1.8;margin-bottom:30px;font-weight:400;max-width:480px}
 .hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px}
 .hero-cta .btn{flex-shrink:0}
-.hero-stats{display:flex;gap:36px;flex-wrap:wrap}
-.hs-n{font-family:'Poppins',sans-serif;font-weight:900;font-size:26px;color:var(--acc);display:block}
-[data-theme="light"] .hs-n{color:var(--gd)}
-.hs-l{font-size:12px;color:var(--txt2);font-weight:400;margin-top:2px}
 
 /* Moon scene */
 .moon-wrap{position:absolute;right:clamp(10px,6vw,100px);top:50%;transform:translateY(-50%);width:clamp(160px,20vw,260px);pointer-events:none;z-index:1}
@@ -598,23 +594,59 @@ footer{
    STEP 15: RESPONSIVE
 ══════════════════════════════════════ */
 @media(max-width:1024px){
-  .hero-preview{display:none}
-  .moon-wrap{right:10px;width:clamp(120px,15vw,180px)}
+  /* Hero stacks; preview shown (not hidden) */
+  .hero{min-height:auto;flex-direction:column;align-items:stretch;padding-bottom:50px}
+  .hero .container{padding-bottom:0}
+  .hero-preview{
+    position:static;right:auto;top:auto;transform:none;
+    width:100%;max-width:560px;
+    margin:32px auto 0;
+    padding:0 clamp(14px,4vw,44px);
+    box-sizing:border-box;
+  }
+  .moon-wrap{
+    position:absolute;right:8px;top:calc(var(--nav-h) + 20px);
+    bottom:auto;transform:none;
+    width:clamp(100px,12vw,140px);opacity:.45;
+  }
   .pillars-grid,.books-grid{grid-template-columns:1fr}
   .fg-grid{grid-template-columns:1fr 1fr}
-  .dash-sb,.admin-sb{display:none}
   .stats-row{grid-template-columns:1fr 1fr}
   .comm-layout{grid-template-columns:1fr}
   .admin-layout{flex-direction:column}
   .ls-grid{grid-template-columns:1fr 1fr}
   .growth-grid{grid-template-columns:repeat(3,1fr)}
+
+  /* Shell sidebars become horizontal scrollable strips — nav never disappears */
+  .dash-page-wrap{flex-direction:column}
+  .dash-sb,.admin-sb{
+    display:flex;flex-direction:row;flex-wrap:nowrap;
+    width:100%;height:auto;position:static;
+    overflow-x:auto;overflow-y:hidden;
+    padding:10px 12px;gap:6px;
+    border-right:none;border-bottom:1px solid var(--brd);
+    align-items:center;scrollbar-width:thin;
+    -webkit-overflow-scrolling:touch;
+  }
+  .dash-sb .sb-user,
+  .admin-sb > div:first-child{display:none}
+  .sb-lbl{display:none}
+  .sb-streak{
+    display:flex;align-items:center;gap:6px;
+    margin:0;padding:6px 12px;flex-shrink:0;width:auto;text-align:left;
+  }
+  .sb-streak .sk-flame{margin-bottom:0}
+  .sb-streak .sk-n{font-size:14px}
+  .sb-streak .sk-l{font-size:10px;white-space:nowrap}
+  .sbl{margin:0;flex-shrink:0;width:auto;padding:8px 14px;white-space:nowrap}
+  .admin-sb > div:last-child{padding:0;margin:0;border:none;flex-shrink:0}
+  .dash-main,.admin-main{padding:18px}
 }
 @media(max-width:680px){
   .nav-links{display:none}.hbg{display:flex}
   .btn-join{display:none}
   .hero-cta{flex-direction:column}
   .hero-cta .btn{width:100%}
-  .hero-stats{gap:18px}
   .stats-row{grid-template-columns:1fr 1fr}
   .growth-grid{grid-template-columns:1fr 1fr}
   .auth-card{padding:24px 16px}
@@ -637,7 +669,7 @@ footer{
 
 <!-- ══ NAVBAR ══ -->
 <nav id="navbar">
-  <button class="nav-logo" onclick="nav('home')">BETTER<spanNATION</span></button>
+  <button class="nav-logo" onclick="nav('home')">BETTER<span>YOU</span></button>
   <div class="nav-links">
     <button class="nl" onclick="nav('home')">Home</button>
     <button class="nl" onclick="grd('dashboard')">Dashboard</button>
@@ -648,7 +680,7 @@ footer{
   </div>
   <div class="nav-r">
     <button class="tbtn" id="theme-btn" onclick="toggleTheme()" data-icon="moon" data-size="16"></button>
-    <div id="nav-guest"><button class="btn-join" onclick="nav('register')">Join BetterNation</button></div>
+    <div id="nav-guest"><button class="btn-join" onclick="nav('register')">Join Better You</button></div>
     <div id="nav-user" style="display:none">
       <button class="av-btn" id="nav-av" onclick="toggleDD(event)">B</button>
       <div class="prof-dd" id="prof-dd">
@@ -669,7 +701,7 @@ footer{
   <button class="nl" onclick="grd('spiritual');closeMob()">Spiritual Growth</button>
   <button class="nl" onclick="commNav();closeMob()">Community</button>
   <button class="nl" onclick="nav('about');closeMob()">About</button>
-  <button class="nl" onclick="nav('register');closeMob()" style="color:var(--acc)">Join BetterNation →</button>
+  <button class="nl" onclick="nav('register');closeMob()" style="color:var(--acc)">Join Better You →</button>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -687,13 +719,8 @@ footer{
       </h1>
       <p class="hero-desc au a2">A structured transformation ecosystem for people serious about growing — spiritually, physically, and mentally — with community and purpose.</p>
       <div class="hero-cta au a3">
-        <button class="btn bp blg" onclick="nav('register')">Join BetterNation →</button>
+        <button class="btn bp blg" onclick="nav('register')">Join Better You →</button>
         <button class="btn bo blg" onclick="document.getElementById('explore-sec').scrollIntoView({behavior:'smooth'})">Explore Platform ↓</button>
-      </div>
-      <div class="hero-stats au a4">
-        <div><span class="hs-n cnt" data-count="3200">0</span><div class="hs-l">Nation Members</div></div>
-        <div><span class="hs-n cnt" data-count="2">0</span><div class="hs-l">Core Pillars</div></div>
-        <div><span class="hs-n cnt" data-count="100">0</span><div class="hs-l">% Free Forever</div></div>
       </div>
     </div>
   </div>
@@ -827,32 +854,19 @@ footer{
 
 <!-- COMMUNITY PREVIEW -->
 <section class="sec" style="padding-top:0">
-  <div class="container">
+  <div class="container" style="text-align:center">
     <span class="badge">Community</span>
     <h2 style="margin-top:14px;margin-bottom:10px">Rise <span style="color:var(--acc)">Together</span></h2>
-    <p style="color:var(--txt2);font-size:15px;font-weight:400;line-height:1.78;margin-bottom:26px;max-width:500px">Transformation stories, scripture insights, and accountability — a community built on growth.</p>
-    <div style="display:grid;gap:13px;max-width:600px">
+    <p style="color:var(--txt2);font-size:15px;font-weight:400;line-height:1.78;margin:0 auto 26px;max-width:500px">Transformation stories, scripture insights, and accountability — a community built on growth.</p>
+    <div style="display:grid;gap:13px;max-width:600px;margin:0 auto;text-align:left">
       <div class="post-card"><div class="ph"><div class="pav" style="background:var(--green)">A</div><div><div class="pnm">Amara O.</div><div class="ptm">2 minutes ago</div></div></div><div class="pbody">Completed Bible reading AND full workout — 7-day streak! This platform transformed how I start each morning.</div><div class="rr"><span class="rb"><span data-icon="thumbs-up" data-size="13"></span> 34</span><span class="rb"><span data-icon="fire" data-size="13"></span> 28</span><span class="rb"><span data-icon="heart" data-size="13"></span> 19</span><span class="rb"><span data-icon="clap" data-size="13"></span> 14</span></div></div>
       <div class="post-card" style="filter:blur(4px);pointer-events:none;user-select:none"><div class="ph"><div class="pav" style="background:var(--yellow);color:#111">D</div><div><div class="pnm">David M.</div><div class="ptm">18 minutes ago</div></div></div><div class="pbody">Week 8 done. First 3 sets of pull-ups unassisted. Daily discipline compounds beautifully.</div></div>
     </div>
-    <div class="gl-card" style="padding:26px;text-align:center;max-width:600px;margin-top:-8px">
+    <div class="gl-card" style="padding:26px;text-align:center;max-width:600px;margin:-8px auto 0">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.7" stroke-linecap="round" style="margin-bottom:9px;display:inline-block"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       <h4 style="margin-bottom:7px;font-size:16px">Join to Access the Full Community</h4>
       <p style="font-size:13px;color:var(--txt2);font-weight:400;margin-bottom:16px;line-height:1.65">Create your free account to post, react, comment, and grow alongside thousands of members.</p>
       <button class="btn bp" onclick="nav('register')">Create Free Account</button>
-    </div>
-  </div>
-</section>
-
-<!-- STATS -->
-<section class="sec" style="padding-top:0;background:var(--bg2)">
-  <div class="container" style="text-align:center">
-    <h2 style="margin-bottom:40px">The Nation <span style="color:var(--acc)">by the Numbers</span></h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:18px">
-      <div class="sc cg"><span class="sn cnt" data-count="3200">0</span><div class="sl">Active Members</div></div>
-      <div class="sc cg"><span class="sn cnt" data-count="47800">0</span><div class="sl">Sessions Completed</div></div>
-      <div class="sc cg"><span class="sn cnt" data-count="12400">0</span><div class="sl">Bible Chapters Read</div></div>
-      <div class="sc cg"><span class="sn cnt" data-count="94">0</span><div class="sl">% Retention Rate</div></div>
     </div>
   </div>
 </section>
@@ -863,7 +877,7 @@ footer{
     <div style="text-align:center;margin-bottom:12px"><span class="badge">Community Stories</span></div>
     <h2 style="text-align:center;margin-bottom:40px">Real People. <span style="color:var(--acc)">Real Transformation.</span></h2>
     <div class="testi-grid">
-      <div class="tc cg"><div class="ts">★★★★★</div><p class="tq">"BetterNation gave me the structure I'd never found elsewhere. Spiritual and personal growth happening simultaneously — I didn't know this was truly possible."</p><div class="ta"><div class="tav" style="background:var(--green)">A</div><div><div style="font-weight:700;font-size:13px">Amara O.</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Member · 3 months</div></div></div></div>
+      <div class="tc cg"><div class="ts">★★★★★</div><p class="tq">"Better You gave me the structure I'd never found elsewhere. Spiritual and personal growth happening simultaneously — I didn't know this was truly possible."</p><div class="ta"><div class="tav" style="background:var(--green)">A</div><div><div style="font-weight:700;font-size:13px">Amara O.</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Member · 3 months</div></div></div></div>
       <div class="tc cg"><div class="ts">★★★★★</div><p class="tq">"The daily Bible tracker paired with workouts transformed my mornings entirely. I wake with purpose now. The community keeps me showing up every single day."</p><div class="ta"><div class="tav" style="background:var(--yellow);color:#111">D</div><div><div style="font-weight:700;font-size:13px">David M.</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Member · 5 months</div></div></div></div>
       <div class="tc cg"><div class="ts">★★★★★</div><p class="tq">"None combine spiritual and personal development with this intentionality. The design is exceptional, the content is serious, the community is genuine."</p><div class="ta"><div class="tav" style="background:#4361ee">S</div><div><div style="font-weight:700;font-size:13px">Sarah K.</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Member · 2 months</div></div></div></div>
     </div>
@@ -874,10 +888,10 @@ footer{
 <div class="cta-sec">
   <div class="container">
     <span class="badge">Begin Today — It's Free</span>
-    <h2 style="margin-top:16px;margin-bottom:12px">The Nation Is <span style="color:var(--acc)">Waiting.</span></h2>
+    <h2 style="margin-top:16px;margin-bottom:12px">Better You Is <span style="color:var(--acc)">Waiting.</span></h2>
     <p style="color:var(--txt2);font-size:15px;font-weight:400;max-width:440px;margin:0 auto 28px;line-height:1.75">Thousands of members are growing daily. Your transformation begins with one decision.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <button class="btn bp blg" onclick="nav('register')">Join BetterNation Free</button>
+      <button class="btn bp blg" onclick="nav('register')">Join Better You Free</button>
       <button class="btn bg-b blg" onclick="nav('login')">Already a Member? Sign In</button>
     </div>
   </div>
@@ -888,19 +902,19 @@ footer{
 <div class="page" id="pg-about" style="flex-direction:column">
   <div class="page-wrap" style="margin-top:auto"><div class="container"><div style="max-width:680px;padding:40px 0 60px">
     <span class="badge">Our Mission</span>
-    <h1 style="margin:16px 0 16px">More Than a Platform.<br><span style="color:var(--acc)">A Nation.</span></h1>
-    <p style="font-size:16px;color:var(--txt2);line-height:1.82;font-weight:400;margin-bottom:18px">BetterNation was built on a singular belief — real transformation only occurs when the spirit, mind, and body are developed together, with structure, accountability, and community.</p>
+    <h1 style="margin:16px 0 16px">More Than a Platform.<br><span style="color:var(--acc)">A Movement.</span></h1>
+    <p style="font-size:16px;color:var(--txt2);line-height:1.82;font-weight:400;margin-bottom:18px">Better You was built on a singular belief — real transformation only occurs when the spirit, mind, and body are developed together, with structure, accountability, and community.</p>
     <p style="font-size:14px;color:var(--txt2);line-height:1.82;font-weight:400;margin-bottom:26px">We are not a gym app. We are not a church app. We are a complete transformation ecosystem.</p>
-    <button class="btn bp blg" onclick="nav('register')">Join the Nation</button>
+    <button class="btn bp blg" onclick="nav('register')">Join Better You</button>
   </div></div></div>
 </div>
 
 <!-- ══ REGISTER ══ -->
 <div class="page auth-page" id="pg-register">
   <div class="auth-wrap">
-    <div class="auth-logo">BETTERNATION</div>
+    <div class="auth-logo">BETTER YOU</div>
     <div class="auth-card">
-      <div class="auth-t">Join the Nation</div>
+      <div class="auth-t">Join Better You</div>
       <div class="auth-s">Begin your transformation journey — it's free</div>
       <div class="ferr" id="re-err"></div>
       <button class="gbtn" onclick="toast('Google sign-in requires Firebase integration','info')">
@@ -914,7 +928,7 @@ footer{
       <div class="fg"><label class="fl">Confirm Password</label><input class="fi" id="rp2" type="password" placeholder="Repeat your password"/></div>
       <div class="fg"><label class="fl">Training As</label><div class="gb-row"><button class="gbb on" id="gbm" onclick="selG('male')">Men</button><button class="gbb" id="gbf" onclick="selG('female')">Women</button></div></div>
       <div class="terms-row"><input type="checkbox" class="tcb" id="tcb"/><label class="tct" for="tcb">I agree to the <span style="color:var(--acc)">Terms of Service</span> and <span style="color:var(--acc)">Privacy Policy</span></label></div>
-      <button class="btn bp bfl" onclick="doReg()">Create Account — Join BetterNation</button>
+      <button class="btn bp bfl" onclick="doReg()">Create Account — Join Better You</button>
       <div class="auth-sw">Already a member? <a onclick="nav('login')">Sign In</a></div>
     </div>
   </div>
@@ -923,7 +937,7 @@ footer{
 <!-- ══ LOGIN ══ -->
 <div class="page auth-page" id="pg-login">
   <div class="auth-wrap">
-    <div class="auth-logo">BETTERNATION</div>
+    <div class="auth-logo">BETTER YOU</div>
     <div class="auth-card">
       <div class="auth-t">Welcome Back</div>
       <div class="auth-s">Continue your transformation journey</div>
@@ -936,7 +950,7 @@ footer{
       <div class="fg"><label class="fl">Email</label><input class="fi" id="le" type="email" placeholder="you@email.com"/></div>
       <div class="fg"><label class="fl">Password</label><input class="fi" id="lp" type="password" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
       <div class="fgt" onclick="toast('Password reset requires Firebase integration','mail')">Forgot password?</div>
-      <button class="btn bp bfl" onclick="doLogin()" style="margin-top:18px">Sign In to BetterNation</button>
+      <button class="btn bp bfl" onclick="doLogin()" style="margin-top:18px">Sign In to Better You</button>
       <div class="auth-sw">New here? <a onclick="nav('register')">Create Account</a></div>
     </div>
   </div>
@@ -946,7 +960,7 @@ footer{
 <div class="page" id="pg-dashboard" style="flex-direction:column">
   <div class="dash-page-wrap" style="flex:1">
     <div class="dash-sb">
-      <div class="sb-user"><div class="sb-av" id="sb-av">B</div><div class="sb-name" id="sb-name">Member</div><div class="sb-role">BetterNation Member</div></div>
+      <div class="sb-user"><div class="sb-av" id="sb-av">B</div><div class="sb-name" id="sb-name">Member</div><div class="sb-role">Better You Member</div></div>
       <span class="sb-lbl">Navigation</span>
       <button class="sbl on" onclick="nav('dashboard')"><span class="si" data-icon="grid" data-size="14"></span> Overview</button>
       <button class="sbl" onclick="grd('spiritual')"><span class="si" data-icon="bible" data-size="14"></span> Spiritual</button>
@@ -1114,10 +1128,10 @@ footer{
   <div class="page-wrap" style="flex:1"><div class="container">
     <div class="comm-layout">
       <div>
-        <h3 style="margin-bottom:16px">Nation <span style="color:var(--acc)">Community</span></h3>
+        <h3 style="margin-bottom:16px">Better You <span style="color:var(--acc)">Community</span></h3>
         <div class="create-card">
           <div style="display:flex;gap:10px;align-items:flex-start"><div class="pav" id="comm-av" style="background:var(--acc)">B</div><textarea class="post-ta" id="post-input" placeholder="Share a win, a scripture, or encourage someone today..."></textarea></div>
-          <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn bp bsm" onclick="createPost()">Share with Nation →</button></div>
+          <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn bp bsm" onclick="createPost()">Share with Community →</button></div>
         </div>
         <div id="comm-feed"></div>
       </div>
@@ -1134,7 +1148,7 @@ footer{
   <div class="page-wrap" style="flex:1"><div class="container" style="padding-bottom:50px">
     <div class="profile-hero">
       <div class="prof-av" id="prof-av">B</div>
-      <div style="flex:1"><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;margin-bottom:3px" id="prof-name">Member</div><div style="font-size:12px;color:var(--acc);font-weight:700;margin-bottom:13px">BetterNation Member</div><div style="display:flex;gap:20px;flex-wrap:wrap"><div><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;color:var(--acc)">7</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Day Streak</div></div><div><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;color:var(--yellow)">25</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Sessions</div></div><div><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;color:var(--acc)">84</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Growth Score</div></div></div></div>
+      <div style="flex:1"><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;margin-bottom:3px" id="prof-name">Member</div><div style="font-size:12px;color:var(--acc);font-weight:700;margin-bottom:13px">Better You Member</div><div style="display:flex;gap:20px;flex-wrap:wrap"><div><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;color:var(--acc)">7</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Day Streak</div></div><div><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;color:var(--yellow)">25</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Sessions</div></div><div><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;color:var(--acc)">84</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Growth Score</div></div></div></div>
       <button class="btn bg-b bsm" onclick="toast('Profile editing coming soon','edit')">Edit Profile</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
@@ -1160,7 +1174,7 @@ footer{
 <div class="page" id="pg-admin" style="flex-direction:column">
   <div class="admin-layout" style="flex:1;padding-top:var(--nav-h)">
     <div class="admin-sb">
-      <div style="padding:14px 15px 12px;border-bottom:1px solid var(--brd);margin-bottom:7px"><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:14px;color:var(--acc)">Admin Portal</div><div style="font-size:10px;color:var(--txt2);font-weight:400;margin-top:1px">BetterNation Management</div></div>
+      <div style="padding:14px 15px 12px;border-bottom:1px solid var(--brd);margin-bottom:7px"><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:14px;color:var(--acc)">Admin Portal</div><div style="font-size:10px;color:var(--txt2);font-weight:400;margin-top:1px">Better You Management</div></div>
       <button class="sbl on" onclick="aPanel('adash',event)"><span class="si" data-icon="bar-chart" data-size="14"></span> Dashboard</button>
       <button class="sbl" onclick="aPanel('ausers',event)"><span class="si" data-icon="users" data-size="14"></span> Users</button>
       <button class="sbl" onclick="aPanel('ayt',event)"><span class="si" data-icon="play" data-size="14"></span> YouTube Manager</button>
@@ -1252,12 +1266,12 @@ footer{
 <footer id="site-footer">
   <div class="container">
     <div class="fg-grid">
-      <div><div class="fb-logo">BETTERNATION</div><p class="fb-desc">Transform Spiritually. Grow Personally. Become Better Completely. A structured ecosystem for complete transformation.</p><span class="badge">Body · Soul · Spirit</span></div>
+      <div><div class="fb-logo">BETTER YOU</div><p class="fb-desc">Transform Spiritually. Grow Personally. Become Better Completely. A structured ecosystem for complete transformation.</p><span class="badge">Body · Soul · Spirit</span></div>
       <div><div class="fc-t">Platform</div><span class="fl-lk" onclick="grd('dashboard')">Dashboard</span><span class="fl-lk" onclick="grd('spiritual')">Spiritual Growth</span><span class="fl-lk" onclick="grd('personal')">Personal Dev</span><span class="fl-lk" onclick="commNav()">Community</span></div>
       <div><div class="fc-t">Resources</div><span class="fl-lk">Bible Reading Plan</span><span class="fl-lk">Workout Programmes</span><span class="fl-lk">Book Library</span><span class="fl-lk">Life Skills</span></div>
       <div><div class="fc-t">Company</div><span class="fl-lk" onclick="nav('about')">About</span><span class="fl-lk">Privacy Policy</span><span class="fl-lk">Terms of Service</span><span class="fl-lk">Contact</span></div>
     </div>
-    <div class="fb-line">© 2026 BetterNation. All rights reserved. Transform Completely.</div>
+    <div class="fb-line">© 2026 Better You. All rights reserved. Transform Completely.</div>
   </div>
 </footer>
 
@@ -1285,7 +1299,7 @@ footer{
   <div class="cong-box" id="cong-box">
     <div class="cong-icon" data-icon="party" data-size="48"></div>
     <div class="cong-t">Great Job!</div>
-    <div class="cong-s">You completed today's workout! Every rep was an investment in who you are becoming. Outstanding discipline — the nation is proud of you.</div>
+    <div class="cong-s">You completed today's workout! Every rep was an investment in who you are becoming. Outstanding discipline — we are proud of you.</div>
     <button class="btn bp bfl" style="margin-bottom:10px" onclick="closeCong()">Continue →</button>
     <button class="btn bg-b bfl" onclick="closeCong();resetWorkout()" style="font-size:12px">Reset & Start Again</button>
     <div style="font-size:11px;color:var(--txt3);margin-top:12px;font-weight:400">Well done. See you tomorrow.</div>
@@ -1838,7 +1852,7 @@ function doReg(){
   if(users[e])return showErr('re-err','Account already exists. Please sign in.');
   const u={name:n,email:e,password:p,gender:regG,isAdmin:false};
   users[e]=u;ss('bn_users',users);
-  loginUser(u);toast('Welcome to BetterNation!','party');
+  loginUser(u);toast('Welcome to Better You!','party');
 }
 function doLogin(){
   hideErr('le-err');
