@@ -336,7 +336,30 @@ function updateNavUser(){
     const sal=document.getElementById('sb-admin');if(sal)sal.style.display=user.isAdmin?'flex':'none';
   }
 }
-(()=>{const s=gs('bn_session',null);if(s?.email){const u=gs('bn_users',{})[s.email]||s;if(u){user=u;exProg=gs('bn_exprog_'+u.email,{});difficulty=gs('bn_diff_'+u.email,'beginner');workoutOverrides=gs('bn_workout_overrides_'+u.email,{});customPlan=gs('bn_custom_plan_'+u.email,{days:{}});customExercises=gs('bn_custom_exercises_'+u.email,{});if(!gs('bn_week_'+u.email,''))ss('bn_week_'+u.email,getWeekKey());checkWeekReset();updateNavUser()}}})();
+(async()=>{
+  try {
+    const signedIn = await cloudLoadAll();
+    if (signedIn && _cloudUser) {
+      user = {
+        name: (_cloudProfile && _cloudProfile.name) || 'Member',
+        email: _cloudUser.email,
+        gender: (_cloudProfile && _cloudProfile.gender) || 'male',
+        isAdmin: !!(_cloudProfile && _cloudProfile.is_admin)
+      };
+      exProg = gs('bn_exprog_'+user.email, {});
+      difficulty = gs('bn_diff_'+user.email, 'beginner');
+      workoutOverrides = gs('bn_workout_overrides_'+user.email, {});
+      customPlan = gs('bn_custom_plan_'+user.email, {days:{}});
+      customExercises = gs('bn_custom_exercises_'+user.email, {});
+      if (!gs('bn_week_'+user.email,'')) ss('bn_week_'+user.email, getWeekKey());
+      checkWeekReset();
+      updateNavUser();
+    }
+  } catch (err) {
+    console.warn('Cloud session restore failed:', err);
+  }
+})();
+
 function getWeekKey(){
   const d=new Date(),day=d.getDay();
   const sunday=new Date(d);sunday.setDate(d.getDate()-day);
@@ -1040,13 +1063,20 @@ function renderProfile(){
   const done=[1,2,3,5,6,7,8,9,12,13,14,15,16,19,20,21,22,23];
   cal.innerHTML=Array.from({length:31},(_,i)=>i+1).map(d=>`<div class="cc${done.includes(d)?' done':''}${d===today?' today-c':''}">${d}</div>`).join('');
 }
-function renderAdmin(){
+async function renderAdmin(){
   const tb=document.getElementById('admin-users-tb');if(!tb)return;
-  const us=gs('bn_users',{});
-  tb.innerHTML=Object.values(us).map(u=>`<tr><td>${escapeHtml(u.name)}</td><td>${escapeHtml(u.email)}</td><td><span style="background:rgba(57,255,20,.12);color:var(--acc);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700">Active</span></td></tr>`).join('')||`<tr><td colspan="3" style="text-align:center;color:var(--txt2);padding:20px">No registered users yet</td></tr>`;
+  try {
+    const us = await cloudGetAllProfiles();
+    tb.innerHTML = us.length
+      ? us.map(u=>`<tr><td>${escapeHtml(u.name)}</td><td>${escapeHtml(u.email)}</td><td><span style="background:rgba(57,255,20,.12);color:var(--acc);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700">${u.is_admin?'Admin':'Active'}</span></td></tr>`).join('')
+      : `<tr><td colspan="3" style="text-align:center;color:var(--txt2);padding:20px">No registered users yet</td></tr>`;
+  } catch {
+    tb.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--txt2);padding:20px">Could not load users</td></tr>`;
+  }
   renderYTManager();
   document.querySelectorAll('#panel-adash .cnt').forEach(el=>animC(el,parseInt(el.getAttribute('data-count'))));
 }
+
 function renderYTManager(){
   const cont=document.getElementById('yt-manager-list');if(!cont)return;
   const allEx=[];
