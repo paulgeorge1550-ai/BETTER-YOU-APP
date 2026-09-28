@@ -1,0 +1,18 @@
+{
+  "name": "Better You — Transform Completely",
+  "short_name": "Better You",
+  "description": "A structured transformation ecosystem for spiritual, physical, and personal growth.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0D0D0D",
+  "theme_color": "#39FF14",
+  "categories": ["health", "lifestyle", "education", "fitness"],
+  "icons": [
+    { "src": "icon.svg",             "sizes": "any",     "type": "image/svg+xml" },
+    { "src": "icon-192.png",         "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png",         "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png","sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
