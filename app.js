@@ -228,8 +228,6 @@ let customPlan={days:{}};
 let customExercises={};
 let cePickerDay=null,cePickerTab='library',cePickerSearch='',ceEditId=null,_ceMode='reps';
 let cpLongTimer=null,cpMenuRef=null,cpMenuDay=null,cpEditMode=false;
-const gs=(k,fb)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):fb}catch{return fb}};
-const ss=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
 let ytLinks=gs('bn_yt_links',{});
 const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAY_FULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -269,7 +267,7 @@ function selG(g){regG=g;document.getElementById('gbm').classList.toggle('on',g==
 function showErr(id,m){const e=document.getElementById(id);e.textContent=m;e.style.display='block'}
 function hideErr(id){document.getElementById(id).style.display='none'}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function doReg(){
+async function doReg(){
   hideErr('re-err');
   const n=document.getElementById('rn').value.trim(),e=document.getElementById('re').value.trim();
   const p=document.getElementById('rp').value,p2=document.getElementById('rp2').value,t=document.getElementById('tcb').checked;
@@ -278,21 +276,34 @@ function doReg(){
   if(p.length<6)return showErr('re-err','Password must be at least 6 characters.');
   if(p!==p2)return showErr('re-err','Passwords do not match.');
   if(!t)return showErr('re-err','Please accept the Terms of Service.');
-  const users=gs('bn_users',{});
-  if(users[e])return showErr('re-err','Account already exists. Please sign in.');
-  const u={name:n,email:e,password:p,gender:regG,isAdmin:false};
-  users[e]=u;ss('bn_users',users);
-  loginUser(u);toast('Welcome to Better You!','party');
+  try {
+    await cloudSignUp(e, p, n, regG);
+    await cloudLoadAll();
+    const u = {name:n, email:e, gender:regG, isAdmin:false};
+    loginUser(u);
+    toast('Welcome to Better You!','party');
+  } catch (err) {
+    showErr('re-err', err.message || 'Registration failed. Please try again.');
+  }
 }
-function doLogin(){
+async function doLogin(){
   hideErr('le-err');
   const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value;
   if(!e||!p)return showErr('le-err','Please complete all fields.');
-  if(e==='admin@betternation.com'&&p==='admin123'){loginUser({name:'Admin',email:e,gender:'male',isAdmin:true});nav('admin');return}
-  const users=gs('bn_users',{});const u=users[e];
-  if(!u)return showErr('le-err','No account found. Please register first.');
-  if(u.password!==p)return showErr('le-err','Incorrect password.');
-  loginUser(u);toast('Welcome back, '+u.name,'check');
+  try {
+    await cloudSignIn(e, p);
+    await cloudLoadAll();
+    const u = {
+      name: (_cloudProfile && _cloudProfile.name) || e.split('@')[0],
+      email: e,
+      gender: (_cloudProfile && _cloudProfile.gender) || 'male',
+      isAdmin: !!(_cloudProfile && _cloudProfile.is_admin)
+    };
+    loginUser(u);
+    toast('Welcome back, '+u.name,'check');
+  } catch (err) {
+    showErr('le-err', err.message || 'Incorrect email or password.');
+  }
 }
 function loginUser(u){
   user=u;ss('bn_session',u);
@@ -306,7 +317,12 @@ function loginUser(u){
   cpEditMode=false;
   updateNavUser();nav('dashboard');
 }
-function signOut(){user=null;ss('bn_session',null);updateNavUser();hView='day';hDetailId=null;hSelDate=null;hForm=null;cpEditMode=false;nav('home');toast('Signed out. See you tomorrow','logout')}
+async function signOut(){
+  try { await cloudSignOut(); } catch {}
+  user=null; updateNavUser();
+  hView='day'; hDetailId=null; hSelDate=null; hForm=null; cpEditMode=false;
+  nav('home'); toast('Signed out. See you tomorrow','logout');
+}
 function updateNavUser(){
   const li=!!user;
   document.getElementById('nav-guest').style.display=li?'none':'block';
