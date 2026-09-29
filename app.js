@@ -232,6 +232,10 @@ let ytLinks=gs('bn_yt_links',{});
 const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAY_FULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 function nav(pg){
+  // Auto-route logged-in users away from marketing pages
+  if (user && (pg === 'home' || pg === 'login' || pg === 'register')) {
+    pg = 'dashboard';
+  }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const el=document.getElementById('pg-'+pg);if(el)el.classList.add('active');
   window.scrollTo(0,0);closeMob();closeDD();
@@ -250,7 +254,12 @@ function closeDD(){document.getElementById('prof-dd').classList.remove('open')}
 document.addEventListener('click',e=>{
   const dd=document.getElementById('prof-dd'),av=document.getElementById('nav-av');
   if(dd&&!dd.contains(e.target)&&e.target!==av)closeDD();
+  document.addEventListener('click',e=>{
+  const dd=document.getElementById('prof-dd'),av=document.getElementById('nav-av');
+  if(dd&&!dd.contains(e.target)&&!(av&&av.contains(e.target)))closeDD();
   const mn=document.getElementById('mob-nav'),hb=document.querySelector('.hbg');
+  if(mn&&mn.classList.contains('open')&&!mn.contains(e.target)&&!(hb&&hb.contains(e.target)))closeMob();
+});
   if(mn&&mn.classList.contains('open')&&!mn.contains(e.target)&&e.target!==hb)closeMob();
 });
 window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>28));
@@ -294,7 +303,9 @@ async function doLogin(){
     await cloudSignIn(e, p);
     await cloudLoadAll();
     const u = {
-      name: (_cloudProfile && _cloudProfile.name) || e.split('@')[0],
+            name: (_cloudProfile && _cloudProfile.name) || 
+            (_cloudUser && _cloudUser.user_metadata && _cloudUser.user_metadata.name) || 
+            e.split('@')[0],
       email: e,
       gender: (_cloudProfile && _cloudProfile.gender) || 'male',
       isAdmin: !!(_cloudProfile && _cloudProfile.is_admin)
@@ -323,41 +334,81 @@ async function signOut(){
   hView='day'; hDetailId=null; hSelDate=null; hForm=null; cpEditMode=false;
   nav('home'); toast('Signed out. See you tomorrow','logout');
 }
+
 function updateNavUser(){
-  const li=!!user;
-  document.getElementById('nav-guest').style.display=li?'none':'block';
-  document.getElementById('nav-user').style.display=li?'block':'none';
-  if(user){
-    const i=user.name.charAt(0).toUpperCase();
-    document.getElementById('nav-av').textContent=i;
-    const sa=document.getElementById('sb-av');if(sa)sa.textContent=i;
-    const sn=document.getElementById('sb-name');if(sn)sn.textContent=user.name;
-    const al=document.getElementById('dd-admin');if(al)al.style.display=user.isAdmin?'block':'none';
-    const sal=document.getElementById('sb-admin');if(sal)sal.style.display=user.isAdmin?'flex':'none';
+  const li = !!user;
+
+  // Guest/user top-right buttons
+  document.getElementById('nav-guest').style.display = li ? 'none' : 'block';
+  document.getElementById('nav-user').style.display  = li ? 'block' : 'none';
+
+  // Desktop nav toggle
+  const setVis = (id, show) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = show ? '' : 'none';
+  };
+  setVis('nav-home',      !li);
+  setVis('nav-dash',       li);
+  setVis('nav-personal',   li);
+  setVis('nav-spiritual',  li);
+  setVis('nav-community',  li);
+
+  // Mobile nav toggle
+  setVis('mob-home',      !li);
+  setVis('mob-dash',       li);
+  setVis('mob-personal',   li);
+  setVis('mob-spiritual',  li);
+  setVis('mob-community',  li);
+  setVis('mob-join',      !li);
+
+  // Populate user info when logged in
+  if (user) {
+    const i = user.name.charAt(0).toUpperCase();
+    document.getElementById('nav-av').textContent = i;
+    const sa = document.getElementById('sb-av'); if (sa) sa.textContent = i;
+    const sn = document.getElementById('sb-name'); if (sn) sn.textContent = user.name;
+
+    // Dropdown header
+    const ddAv = document.getElementById('dd-av'); if (ddAv) ddAv.textContent = i;
+    const ddNm = document.getElementById('dd-name'); if (ddNm) ddNm.textContent = user.name;
+    const ddRl = document.getElementById('dd-role'); if (ddRl) ddRl.textContent = user.isAdmin ? 'Administrator' : 'Better You Member';
+
+    // Admin buttons
+    const al = document.getElementById('dd-admin'); if (al) al.style.display = user.isAdmin ? 'flex' : 'none';
+    const sal = document.getElementById('sb-admin'); if (sal) sal.style.display = user.isAdmin ? 'flex' : 'none';
   }
 }
-(async()=>{
-  try {
-    const signedIn = await cloudLoadAll();
-    if (signedIn && _cloudUser) {
-      user = {
-        name: (_cloudProfile && _cloudProfile.name) || 'Member',
+
+// ── BOOT: Restore session, then route ──
+(async function boot() {
+  document.body.classList.add('booting');
+
+  await cloudInitSession(async (isLoggedIn) => {
+    if (isLoggedIn && _cloudUser) {
+      const u = {
+                name: (_cloudProfile && _cloudProfile.name) || 
+              (_cloudUser.user_metadata && _cloudUser.user_metadata.name) || 
+              _cloudUser.email.split('@')[0],
         email: _cloudUser.email,
         gender: (_cloudProfile && _cloudProfile.gender) || 'male',
         isAdmin: !!(_cloudProfile && _cloudProfile.is_admin)
       };
-      exProg = gs('bn_exprog_'+user.email, {});
-      difficulty = gs('bn_diff_'+user.email, 'beginner');
-      workoutOverrides = gs('bn_workout_overrides_'+user.email, {});
-      customPlan = gs('bn_custom_plan_'+user.email, {days:{}});
-      customExercises = gs('bn_custom_exercises_'+user.email, {});
-      if (!gs('bn_week_'+user.email,'')) ss('bn_week_'+user.email, getWeekKey());
+      user = u;
+      exProg = gs('bn_exprog_' + u.email, {});
+      difficulty = gs('bn_diff_' + u.email, 'beginner');
+      workoutOverrides = gs('bn_workout_overrides_' + u.email, {});
+      customPlan = gs('bn_custom_plan_' + u.email, {days:{}});
+      customExercises = gs('bn_custom_exercises_' + u.email, {});
+      if (!gs('bn_week_' + u.email, '')) ss('bn_week_' + u.email, getWeekKey());
       checkWeekReset();
       updateNavUser();
+      document.body.classList.remove('booting');
+      nav('dashboard');
+    } else {
+      document.body.classList.remove('booting');
+      nav('home');
     }
-  } catch (err) {
-    console.warn('Cloud session restore failed:', err);
-  }
+  });
 })();
 
 function getWeekKey(){

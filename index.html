@@ -16,12 +16,12 @@
 <div id="ambient"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
 <nav id="navbar">
   <button class="nav-logo" onclick="nav('home')">BETTER<span>YOU</span></button>
-  <div class="nav-links">
-    <button class="nl" onclick="nav('home')">Home</button>
-    <button class="nl" onclick="grd('dashboard')">Dashboard</button>
-    <button class="nl" onclick="grd('personal')">Personal Dev</button>
-    <button class="nl" onclick="grd('spiritual')">Spiritual Growth</button>
-    <button class="nl" onclick="commNav()">Community</button>
+    <div class="nav-links">
+    <button class="nl" id="nav-home" onclick="nav('home')">Home</button>
+    <button class="nl" id="nav-dash" style="display:none" onclick="grd('dashboard')">Dashboard</button>
+    <button class="nl" id="nav-personal" style="display:none" onclick="grd('personal')">Personal Dev</button>
+    <button class="nl" id="nav-spiritual" style="display:none" onclick="grd('spiritual')">Spiritual Growth</button>
+    <button class="nl" id="nav-community" style="display:none" onclick="commNav()">Community</button>
     <button class="nl" onclick="nav('about')">About</button>
   </div>
   <div class="nav-r">
@@ -29,7 +29,15 @@
     <div id="nav-guest"><button class="btn-join" onclick="nav('register')">Join Better You</button></div>
     <div id="nav-user" style="display:none">
       <button class="av-btn" id="nav-av" onclick="toggleDD(event)">B</button>
-      <div class="prof-dd" id="prof-dd">
+           <div class="prof-dd" id="prof-dd">
+        <div class="dd-head">
+          <div class="dd-head-av" id="dd-av">B</div>
+          <div class="dd-head-info">
+            <div class="dd-head-name" id="dd-name">Member</div>
+            <div class="dd-head-role" id="dd-role">Better You Member</div>
+          </div>
+        </div>
+        <div class="dd-div"></div>
         <button class="ddi" onclick="grd('dashboard');closeDD()"><span data-icon="grid" data-size="14"></span> Dashboard</button>
         <button class="ddi" onclick="grd('profile');closeDD()"><span data-icon="user" data-size="14"></span> Profile</button>
         <button class="ddi" id="dd-admin" style="display:none" onclick="nav('admin');closeDD()"><span data-icon="settings" data-size="14"></span> Admin Portal</button>
@@ -41,13 +49,13 @@
   </div>
 </nav>
 <div id="mob-nav">
-  <button class="nl" onclick="nav('home');closeMob()">Home</button>
-  <button class="nl" onclick="grd('dashboard');closeMob()">Dashboard</button>
-  <button class="nl" onclick="grd('personal');closeMob()">Personal Dev</button>
-  <button class="nl" onclick="grd('spiritual');closeMob()">Spiritual Growth</button>
-  <button class="nl" onclick="commNav();closeMob()">Community</button>
+  <button class="nl" id="mob-home" onclick="nav('home');closeMob()">Home</button>
+  <button class="nl" id="mob-dash" style="display:none" onclick="grd('dashboard');closeMob()">Dashboard</button>
+  <button class="nl" id="mob-personal" style="display:none" onclick="grd('personal');closeMob()">Personal Dev</button>
+  <button class="nl" id="mob-spiritual" style="display:none" onclick="grd('spiritual');closeMob()">Spiritual Growth</button>
+  <button class="nl" id="mob-community" style="display:none" onclick="commNav();closeMob()">Community</button>
   <button class="nl" onclick="nav('about');closeMob()">About</button>
-  <button class="nl" onclick="nav('register');closeMob()" style="color:var(--acc)">Join Better You →</button>
+  <button class="nl" id="mob-join" onclick="nav('register');closeMob()" style="color:var(--acc)">Join Better You →</button>
 </div>
 <div class="page active" id="pg-home" style="flex-direction:column">
 <section class="hero" style="padding-top:calc(var(--nav-h) + 40px)">

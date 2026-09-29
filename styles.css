@@ -82,13 +82,88 @@ h3{font-size:clamp(18px,2.8vw,28px)}
 .tbtn:hover{background:var(--card)}
 .av-btn{width:33px;height:33px;border-radius:50%;background:linear-gradient(135deg,var(--green),#a8ff78);color:#0a0a0a;font-weight:900;font-size:13px;font-family:'Poppins',sans-serif;border:none;display:flex;align-items:center;justify-content:center;transition:all .22s}
 .av-btn:hover{box-shadow:0 0 14px var(--gg)}
-.prof-dd{position:absolute;top:calc(100% + 10px);right:0;background:var(--card);border:1px solid var(--brd2);border-radius:14px;padding:7px;min-width:188px;box-shadow:0 16px 48px rgba(0,0,0,.35);display:none;flex-direction:column;gap:2px;animation:slideDown .2s ease;z-index:300}
+.prof-dd{
+  position:absolute;
+  top:calc(100% + 12px);
+  right:0;
+  background:var(--card);
+  border:1px solid var(--brd2);
+  border-radius:16px;
+  padding:8px;
+  min-width:220px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.03);
+  display:none;
+  flex-direction:column;
+  gap:3px;
+  animation:slideDown .22s cubic-bezier(.22,1,.36,1);
+  z-index:300;
+}
 .prof-dd.open{display:flex}
-.ddi{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:9px;font-size:13px;font-weight:700;color:var(--txt2);transition:all .18s;border:none;background:none;text-align:left;width:100%}
+.ddi{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:11px 14px;
+  border-radius:11px;
+  font-size:13px;
+  font-weight:700;
+  color:var(--txt2);
+  transition:all .18s;
+  border:none;
+  background:none;
+  text-align:left;
+  width:100%;
+  line-height:1;
+}
+.dd-head{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:linear-gradient(135deg,rgba(57,255,20,.06),rgba(255,214,10,.03));
+}
+.dd-head-av{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--green),#a8ff78);
+  color:#0a0a0a;
+  font-family:'Poppins',sans-serif;
+  font-weight:900;
+  font-size:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 0 14px rgba(57,255,20,.22);
+}
+.dd-head-info{ flex:1; min-width:0; }
+.dd-head-name{
+  font-family:'Poppins',sans-serif;
+  font-weight:900;
+  font-size:13px;
+  color:var(--txt);
+  margin-bottom:2px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.dd-head-role{
+  font-size:10px;
+  color:var(--acc);
+  font-weight:700;
+  letter-spacing:.3px;
+}
 .ddi:hover{background:var(--bg3);color:var(--txt)}
 .ddi.red:hover{color:#ff6b6b;background:rgba(255,60,60,.07)}
 .ddi svg{flex-shrink:0}
-.dd-div{height:1px;background:var(--brd);margin:3px 0}
+.dd-div{
+  height:1px;
+  background:var(--brd);
+  margin:6px 8px;
+  border-radius:2px;
+}
 .hbg{display:none;width:34px;height:34px;border-radius:9px;background:var(--card2);border:1px solid var(--brd);color:var(--txt);font-size:17px;align-items:center;justify-content:center;flex-shrink:0}
 #mob-nav{display:none;position:fixed;top:var(--nav-h);left:0;right:0;z-index:999;background:var(--bg2);border-bottom:1px solid var(--brd2);padding:10px;flex-direction:column;gap:3px;animation:fadeIn .2s;max-height:calc(100vh - var(--nav-h));overflow-y:auto}
 #mob-nav.open{display:flex}
@@ -621,4 +696,52 @@ footer{background:var(--bg2);border-top:1px solid var(--brd);padding:44px 0 22px
   .habit-status-btn{width:52px;min-height:52px}
   .habit-date-nav{padding:10px 12px}
   .habit-nav-btn{width:32px;height:32px}
+}
+
+
+/* ══════════════════════════════════════════
+   BOOT LOADING STATE (Phase 0)
+   ══════════════════════════════════════════ */
+body.booting .page { display: none !important; }
+
+body.booting::before {
+  content: 'BETTER YOU';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #39FF14, #a8ff78);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  z-index: 10001;
+  animation: bootPulse 1.6s ease-in-out infinite;
+}
+
+body.booting::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: #0D0D0D;
+  z-index: 10000;
+}
+
+[data-theme="light"] body.booting::after {
+  background: #ffffff;
+}
+
+[data-theme="light"] body.booting::before {
+  background: linear-gradient(135deg, #1db300, #2d8c00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes bootPulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.05); }
 }

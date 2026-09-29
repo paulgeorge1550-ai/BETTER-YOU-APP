@@ -146,3 +146,61 @@ async function cloudGetAllUserDataKey(key) {
   const { data, error } = await _sb.from('user_data').select('user_id,value').eq('key', key);
   return error ? [] : (data || []);
 }
+
+
+// ══════════════════════════════════════════
+// SESSION INITIALIZATION (Phase 0)
+// ══════════════════════════════════════════
+// Restores Supabase session BEFORE the UI renders.
+// Prevents the flash of login screen on every page load.
+
+async function cloudInitSession(onReady) {
+  let finished = false;
+
+  const timeout = setTimeout(() => {
+    if (!finished) {
+      finished = true;
+      console.warn('cloudInitSession: timed out');
+      if (onReady) onReady(false);
+    }
+  }, 4000);
+
+  try {
+    const { data: { session } } = await _sb.auth.getSession();
+
+    if (session) {
+      await cloudLoadAll();
+      if (!finished) {
+        finished = true;
+        clearTimeout(timeout);
+        if (onReady) onReady(true);
+      }
+    } else {
+      if (!finished) {
+        finished = true;
+        clearTimeout(timeout);
+        if (onReady) onReady(false);
+      }
+    }
+
+    _sb.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        await cloudLoadAll();
+        if (onReady) onReady(true);
+      }
+      if (event === 'SIGNED_OUT') {
+        _cloudCache = {};
+        _cloudUser = null;
+        _cloudProfile = null;
+        if (onReady) onReady(false);
+      }
+    });
+  } catch (e) {
+    console.error('cloudInitSession failed:', e);
+    if (!finished) {
+      finished = true;
+      clearTimeout(timeout);
+      if (onReady) onReady(false);
+    }
+  }
+}
