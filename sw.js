@@ -1,4 +1,4 @@
-const CACHE_NAME = 'better-you-v3';
+const CACHE_NAME = 'better-you-v4';
 const ASSETS = [
   './',
   './index.html',
