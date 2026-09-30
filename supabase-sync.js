@@ -62,6 +62,7 @@ async function cloudLoadAll() {
 
   if (ud.data) ud.data.forEach(r => { _cloudCache[r.key] = r.value; });
   if (gd.data) gd.data.forEach(r => { _cloudCache['@g/' + r.key] = r.value; });
+  if (pf.error) console.error('Profile fetch failed:', pf.error);
   if (pf.data) _cloudProfile = pf.data;
 
   return true;
