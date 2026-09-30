@@ -231,11 +231,58 @@ let cpLongTimer=null,cpMenuRef=null,cpMenuDay=null,cpEditMode=false;
 let ytLinks=gs('bn_yt_links',{});
 const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAY_FULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+// ── TAB BAR (Phase 1 structure) ──
+const TAB_MAP = {
+  home:      {loggedIn:'dashboard', guest:'home'},
+  personal:  {loggedIn:'personal',  guest:'register'},
+  spiritual: {loggedIn:'spiritual', guest:'register'},
+  community: {loggedIn:'community', guest:'register'},
+  more:      {loggedIn:'more',      guest:'about'}
+};
+
+const PAGE_TO_TAB = {
+  dashboard:'home',
+  home:'home',
+  personal:'personal',
+  spiritual:'spiritual',
+  community:'community',
+  more:'more',
+  profile:'more',
+  admin:'more',
+  about:'more'
+};
+
+function switchTab(tabName){
+  const tab = TAB_MAP[tabName];
+  if (!tab) return;
+  const target = user ? tab.loggedIn : tab.guest;
+  nav(target);
+  setActiveTab(tabName);
+}
+
+function setActiveTab(tabName){
+  document.querySelectorAll('#tab-bar .tab-btn').forEach(btn => {
+    btn.classList.toggle('on', btn.dataset.tab === tabName);
+  });
+}
+
+function updateTabBarVisibility(){
+  const tb = document.getElementById('tab-bar');
+  if (!tb) return;
+  tb.style.display = 'flex';
+  tb.classList.toggle('guest', !user);
+}
+
 function nav(pg){
   // Auto-route logged-in users away from marketing pages
   if (user && (pg === 'home' || pg === 'login' || pg === 'register')) {
     pg = 'dashboard';
   }
+  // Highlight the matching tab (if tab bar exists)
+  const tabName = PAGE_TO_TAB[pg];
+  if (tabName) setActiveTab(tabName);
+
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const el=document.getElementById('pg-'+pg);if(el)el.classList.add('active');
   window.scrollTo(0,0);closeMob();closeDD();
@@ -247,26 +294,24 @@ function nav(pg){
 }
 function grd(pg){user?nav(pg):nav('login')}
 function commNav(){user?nav('community'):nav('register')}
-function toggleMob(){document.getElementById('mob-nav').classList.toggle('open')}
-function closeMob(){document.getElementById('mob-nav').classList.remove('open')}
-function toggleDD(e){if(e)e.stopPropagation();document.getElementById('prof-dd').classList.toggle('open')}
-function closeDD(){document.getElementById('prof-dd').classList.remove('open')}
+function toggleMob(){const mn=document.getElementById('mob-nav');if(mn)mn.classList.toggle('open')}
+function closeMob(){const mn=document.getElementById('mob-nav');if(mn)mn.classList.remove('open')}
+function toggleDD(e){if(e)e.stopPropagation();const dd=document.getElementById('prof-dd');if(dd)dd.classList.toggle('open')}
+function closeDD(){const dd=document.getElementById('prof-dd');if(dd)dd.classList.remove('open')}
 document.addEventListener('click',e=>{
-  const dd=document.getElementById('prof-dd'),av=document.getElementById('nav-av');
-  if(dd&&!dd.contains(e.target)&&e.target!==av)closeDD();
-  document.addEventListener('click',e=>{
-  const dd=document.getElementById('prof-dd'),av=document.getElementById('nav-av');
+  const dd=document.getElementById('prof-dd');
+  const av=document.getElementById('nav-av');
   if(dd&&!dd.contains(e.target)&&!(av&&av.contains(e.target)))closeDD();
-  const mn=document.getElementById('mob-nav'),hb=document.querySelector('.hbg');
-  if(mn&&mn.classList.contains('open')&&!mn.contains(e.target)&&!(hb&&hb.contains(e.target)))closeMob();
-});
-  if(mn&&mn.classList.contains('open')&&!mn.contains(e.target)&&e.target!==hb)closeMob();
+  const mob=document.getElementById('mob-nav');
+  const hb=document.querySelector('.hbg');
+  if(mob&&mob.classList.contains('open')&&!mob.contains(e.target)&&!(hb&&hb.contains(e.target)))closeMob();
 });
 window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>28));
 function toggleTheme(){
   const d=document.documentElement,dark=d.getAttribute('data-theme')==='dark';
   const nt=dark?'light':'dark';d.setAttribute('data-theme',nt);
-  document.getElementById('theme-btn').innerHTML=ico(nt==='dark'?'moon':'sun',16);ss('bn_theme',nt);
+  const btn=document.getElementById('theme-btn');if(btn)btn.innerHTML=ico(nt==='dark'?'moon':'sun',16);
+  ss('bn_theme',nt);
 }
 (()=>{const t=gs('bn_theme','dark');document.documentElement.setAttribute('data-theme',t);const btn=document.getElementById('theme-btn');if(btn){btn.innerHTML=ico(t==='dark'?'moon':'sun',16);btn.removeAttribute('data-icon')}})();
 function toast(msg,ic='check'){const el=document.getElementById('toast-el');document.getElementById('t-msg').textContent=msg;document.getElementById('t-ico').innerHTML=ico(ic,15);el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3300)}
@@ -274,7 +319,7 @@ function glowCard(el,type){el.classList.remove('glow-green-top','glow-yellow-top
 function glowTop(el,type){el.classList.remove('glow-green-top','glow-yellow-top');void el.offsetWidth;el.classList.add(type==='green'?'glow-green-top':'glow-yellow-top');setTimeout(()=>el.classList.remove('glow-green-top','glow-yellow-top'),800)}
 function selG(g){regG=g;document.getElementById('gbm').classList.toggle('on',g==='male');document.getElementById('gbf').classList.toggle('on',g==='female')}
 function showErr(id,m){const e=document.getElementById(id);e.textContent=m;e.style.display='block'}
-function hideErr(id){document.getElementById(id).style.display='none'}
+function hideErr(id){const e=document.getElementById(id);if(e)e.style.display='none'}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function doReg(){
   hideErr('re-err');
@@ -303,7 +348,7 @@ async function doLogin(){
     await cloudSignIn(e, p);
     await cloudLoadAll();
     const u = {
-            name: (_cloudProfile && _cloudProfile.name) || 
+      name: (_cloudProfile && _cloudProfile.name) || 
             (_cloudUser && _cloudUser.user_metadata && _cloudUser.user_metadata.name) || 
             e.split('@')[0],
       email: e,
@@ -376,7 +421,19 @@ function updateNavUser(){
     // Admin buttons
     const al = document.getElementById('dd-admin'); if (al) al.style.display = user.isAdmin ? 'flex' : 'none';
     const sal = document.getElementById('sb-admin'); if (sal) sal.style.display = user.isAdmin ? 'flex' : 'none';
+    const ma = document.getElementById('more-admin'); if (ma) ma.style.display = 'flex';
+    const mus = document.getElementById('more-user-section'); if (mus) mus.style.display = 'block';
+
+    // Streak badge in top nav
+    const ns = document.getElementById('nav-streak'); if (ns) ns.style.display = 'inline-flex';
+    const nsn = document.getElementById('nav-streak-num'); if (nsn) nsn.textContent = '7';
+  } else {
+    const ma = document.getElementById('more-admin'); if (ma) ma.style.display = 'none';
+    const mus = document.getElementById('more-user-section'); if (mus) mus.style.display = 'none';
+    const ns = document.getElementById('nav-streak'); if (ns) ns.style.display = 'none';
   }
+  // Show/hide tab bar based on login state
+  updateTabBarVisibility();
 }
 
 // ── BOOT: Restore session, then route ──
@@ -386,7 +443,7 @@ function updateNavUser(){
   await cloudInitSession(async (isLoggedIn) => {
     if (isLoggedIn && _cloudUser) {
       const u = {
-                name: (_cloudProfile && _cloudProfile.name) || 
+        name: (_cloudProfile && _cloudProfile.name) || 
               (_cloudUser.user_metadata && _cloudUser.user_metadata.name) || 
               _cloudUser.email.split('@')[0],
         email: _cloudUser.email,

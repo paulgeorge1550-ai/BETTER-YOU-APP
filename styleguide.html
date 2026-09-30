@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Better You — Style Guide v6</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --r:18px;--rs:12px;
+  --font-display:'Cinzel',serif;
+  --font-verse:'Cormorant Garamond',serif;
+  --font-body:'Inter',sans-serif;
+  --font-alt:'DM Sans',sans-serif;
+}
+
+/* ═══════════ LIGHT MODE ═══════════ */
+[data-theme="light"]{
+  --bg:#F5F1E8;--bg2:#E8E2D2;--card:#FFFFFF;--card2:#FCFAF5;
+  --brd:rgba(210,202,182,.4);--brd2:rgba(210,202,182,.7);
+  --txt:#1A1814;--txt2:#5A5443;--txt3:#8B8472;
+  --brand:#C9942F;--brand-deep:#A87719;--brand-soft:#D9AE4A;
+  --brand-tint:rgba(201,148,47,.10);
+  --champagne:#EFD9A8;--amber:#E8A94A;
+  /* Alive green — light */
+  --success:#1FA24A;--success-soft:#35C25E;--success-bright:#4ED17A;
+  --success-tint:rgba(31,162,74,.10);
+  --accent:#A04828;--accent-soft:#C75E3D;--accent-tint:rgba(160,72,40,.10);
+  --verse:#1A1814;--verse-label:#A87719;
+  --gold-300:#DDBB6B;--gold-400:#D9AE4A;--gold-500:#C9942F;--gold-600:#A87719;
+  --sage-300:#7FD98D;--sage-400:#4EC464;--sage-500:#1FA24A;--sage-600:#157536;
+  --clay-300:#EC9E84;--clay-400:#E07856;--clay-500:#C75E3D;--clay-600:#A04828;--clay-700:#7B3620;
+  /* Shimmer tone */
+  --shimmer:rgba(255,255,255,.65);
+  --shimmer-soft:rgba(255,255,255,.15);
+}
+
+/* ═══════════ DARK MODE ═══════════ */
+[data-theme="dark"]{
+  --bg:#12100C;--bg2:#1E1B15;--card:#1C1914;--card2:#252118;
+  --brd:rgba(210,200,175,.09);--brd2:rgba(210,200,175,.16);
+  --txt:#F0E8D8;--txt2:#A8A08E;--txt3:#7A7362;
+  --brand:#D9AE4A;--brand-deep:#C9942F;--brand-soft:#DDBB6B;
+  --brand-tint:rgba(217,174,74,.12);
+  --champagne:#F5E6C0;--amber:#E8A94A;
+  /* Alive green — dark */
+  --success:#5FE37F;--success-soft:#7DF09A;--success-bright:#A8FABB;
+  --success-tint:rgba(95,227,127,.14);
+  --accent:#E07856;--accent-soft:#EC9E84;--accent-tint:rgba(224,120,86,.12);
+  --verse:#F0E8D8;--verse-label:#DDBB6B;
+  --gold-300:#DDBB6B;--gold-400:#D9AE4A;--gold-500:#C9942F;--gold-600:#A87719;
+  --sage-300:#A8FABB;--sage-400:#7DF09A;--sage-500:#5FE37F;--sage-600:#35C25E;
+  --clay-300:#EC9E84;--clay-400:#E07856;--clay-500:#C75E3D;--clay-600:#A04828;--clay-700:#7B3620;
+  /* Shimmer tone — warm cream for dark */
+  --shimmer:rgba(245,230,192,.55);
+  --shimmer-soft:rgba(245,230,192,.10);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--txt);
+  padding:32px 24px;
+  transition:background .3s,color .3s;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+h1{
+  font-family:var(--font-display);
+  font-size:24px;
+  margin-bottom:8px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+[data-theme="dark"] h1{font-weight:700}
+
+h2{
+  font-family:var(--font-display);
+  font-size:14px;
+  margin:32px 0 12px;
+  color:var(--brand);
+  font-weight:800;
+  letter-spacing:.20em;
+  text-transform:uppercase;
+}
+[data-theme="dark"] h2{font-weight:700;letter-spacing:.18em}
+
+h3{
+  font-family:var(--font-body);
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--txt2);
+}
+
+.sub{color:var(--txt2);font-size:14px;margin-bottom:24px;line-height:1.6}
+
+.toggle{
+  position:fixed;top:20px;right:20px;
+  padding:10px 18px;
+  background:var(--brand);color:var(--bg);
+  border:none;border-radius:10px;
+  font-weight:600;cursor:pointer;
+  font-family:var(--font-body);font-size:13px;
+  z-index:100;
+  transition:all .2s;
+}
+.toggle:hover{background:var(--brand-soft)}
+
+.wrap{max-width:960px;margin:0 auto}
+
+.swatches{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:12px;
+}
+.sw{
+  border-radius:12px;padding:16px;
+  border:1px solid var(--brd);
+  min-height:80px;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.sw-code{font-size:11px;font-weight:600;opacity:.75;font-family:var(--font-body)}
+.sw-name{font-size:13px;font-weight:600;font-family:var(--font-body)}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--brd);
+  border-radius:var(--r);
+  padding:24px;margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+
+.hero-card{
+  background:var(--card);
+  border:1px solid var(--brd2);
+  border-radius:var(--r);
+  padding:32px 28px;
+  position:relative;overflow:hidden;
+}
+.hero-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold-400),var(--champagne),var(--gold-400),transparent);
+  opacity:.8;
+}
+
+.verse-label{
+  font-family:var(--font-display);
+  font-size:10px;
+  letter-spacing:.24em;
+  font-weight:600;
+  color:var(--verse-label);
+  margin-bottom:22px;
+  text-transform:uppercase;
+}
+[data-theme="dark"] .verse-label{font-weight:500}
+
+.verse{
+  font-family:var(--font-verse);
+  font-style:italic;
+  font-size:23px;
+  line-height:1.55;
+  color:var(--verse);
+  margin:0 0 18px;
+  font-weight:400;
+  letter-spacing:.005em;
+}
+.verse-ref{
+  font-family:var(--font-display);
+  font-size:10px;
+  color:var(--txt3);
+  font-weight:600;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+}
+[data-theme="dark"] .verse-ref{font-weight:500}
+
+.btn{
+  padding:12px 24px;
+  border-radius:12px;border:none;
+  font-weight:600;
+  font-family:var(--font-body);font-size:14px;
+  cursor:pointer;margin-right:8px;margin-bottom:8px;
+  transition:all .2s;
+}
+.btn-primary{background:var(--brand);color:#0D0B08}
+.btn-primary:hover{background:var(--brand-soft);box-shadow:0 0 24px var(--brand-tint)}
+.btn-secondary{background:transparent;color:var(--txt);border:1px solid var(--brd2)}
+.btn-secondary:hover{border-color:var(--brand);color:var(--brand)}
+.btn-success{background:var(--success);color:#0D0B08}
+.btn-success:hover{background:var(--success-soft)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-ghost{background:var(--brand-tint);color:var(--brand)}
+
+/* ═══ ALIVE PROGRESS BAR — shimmer visible in both modes ═══ */
+.bar{
+  height:12px;
+  background:var(--bg2);
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:8px;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.10);
+  position:relative;
+}
+.bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--success) 0%,var(--success-soft) 55%,var(--success-bright) 100%);
+  border-radius:20px;
+  transition:width .8s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 0 16px var(--success-tint),0 0 6px var(--success-soft);
+  position:relative;
+  overflow:hidden;
+}
+.bar-fill::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:20px;
+  background:linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--shimmer-soft) 30%,
+    var(--shimmer) 50%,
+    var(--shimmer-soft) 70%,
+    transparent 100%
+  );
+  animation:barShimmer 2.2s ease-in-out infinite;
+  mix-blend-mode:overlay;
+  pointer-events:none;
+}
+[data-theme="light"] .bar-fill::before{
+  mix-blend-mode:soft-light;
+}
+[data-theme="dark"] .bar-fill::before{
+  mix-blend-mode:screen;
+}
+@keyframes barShimmer{
+  0%{transform:translateX(-120%)}
+  100%{transform:translateX(220%)}
+}
+
+/* ═══ GREETING — Inter label + Cinzel name ═══ */
+.greeting-block{
+  display:flex;
+  flex-direction:column;
+  margin-bottom:6px;
+}
+.greeting-label{
+  font-family:var(--font-body);
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--txt2);
+  margin-bottom:8px;
+}
+.greeting-name{
+  font-family:var(--font-display);
+  font-size:30px;
+  font-weight:800;
+  letter-spacing:.02em;
+  color:var(--txt);
+  line-height:1.15;
+}
+[data-theme="dark"] .greeting-name{font-weight:700}
+
+.chip{
+  display:inline-block;
+  padding:5px 14px;border-radius:20px;
+  font-size:12px;font-weight:600;
+  margin-right:8px;margin-bottom:8px;
+  font-family:var(--font-body);
+}
+.chip-brand{background:var(--brand-tint);color:var(--brand)}
+.chip-success{background:var(--success-tint);color:var(--success)}
+.chip-accent{background:var(--accent-tint);color:var(--accent)}
+.chip-champagne{background:rgba(239,217,168,.18);color:var(--champagne);border:1px solid rgba(239,217,168,.28)}
+
+.body-demo{
+  font-family:var(--font-body);
+  font-size:15px;
+  line-height:1.7;
+  color:var(--txt);
+  margin-bottom:10px;
+}
+.body-demo-sm{
+  font-family:var(--font-body);
+  font-size:13px;
+  line-height:1.6;
+  color:var(--txt2);
+}
+
+.display-showcase-big{
+  font-family:var(--font-display);
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--txt);
+  font-size:26px;
+}
+[data-theme="dark"] .display-showcase-big{font-weight:700}
+</style>
+</head>
+<body>
+<button class="toggle" onclick="const d=document.documentElement;d.setAttribute('data-theme',d.getAttribute('data-theme')==='dark'?'light':'dark')">Toggle Mode</button>
+<div class="wrap">
+
+  <h1>Better You</h1>
+  <p class="sub">Style Guide v6 — shimmer visible both modes, Inter greeting label</p>
+
+  <h2>Greeting</h2>
+  <div class="card">
+    <div class="greeting-block">
+      <div class="greeting-label">Good Morning</div>
+      <div class="greeting-name">Paul George</div>
+    </div>
+  </div>
+
+  <h2>The Word of the Day</h2>
+  <div class="hero-card">
+    <div class="verse-label">THE WORD OF THE DAY</div>
+    <div class="verse">
+      "For in him we live<br/>
+      and move and have our being."
+    </div>
+    <div class="verse-ref">— ACTS 17:28</div>
+  </div>
+
+  <h2>Alive Progress Bar</h2>
+  <div class="card">
+    <div class="bar"><div class="bar-fill" style="width:68%"></div></div>
+    <p style="margin-top:16px;color:var(--txt2);font-size:13px">68% of today's session complete</p>
+
+    <div style="margin-top:24px">
+      <div class="bar"><div class="bar-fill" style="width:30%"></div></div>
+      <p style="margin-top:12px;color:var(--txt2);font-size:12px">30% — Day 3 of 10</p>
+    </div>
+
+    <div style="margin-top:24px">
+      <div class="bar"><div class="bar-fill" style="width:100%"></div></div>
+      <p style="margin-top:12px;color:var(--success);font-size:12px;font-weight:600">100% — Streak complete</p>
+    </div>
+  </div>
+
+  <h2>Gold Family</h2>
+  <div class="swatches">
+    <div class="sw" style="background:var(--champagne);color:#3A2808"><div class="sw-name">Champagne</div><div class="sw-code">#EFD9A8 / #F5E6C0</div></div>
+    <div class="sw" style="background:var(--gold-300);color:#3A2808"><div class="sw-name">Gold 300</div><div class="sw-code">#DDBB6B</div></div>
+    <div class="sw" style="background:var(--gold-400);color:#3A2808"><div class="sw-name">Gold 400</div><div class="sw-code">#D9AE4A</div></div>
+    <div class="sw" style="background:var(--gold-500);color:#fff"><div class="sw-name">Gold 500</div><div class="sw-code">#C9942F</div></div>
+    <div class="sw" style="background:var(--gold-600);color:#fff"><div class="sw-name">Gold 600</div><div class="sw-code">#A87719</div></div>
+    <div class="sw" style="background:var(--amber);color:#3A2808"><div class="sw-name">Amber</div><div class="sw-code">#E8A94A</div></div>
+  </div>
+
+  <h2>Sage Family — Alive Green</h2>
+  <div class="swatches">
+    <div class="sw" style="background:var(--sage-300);color:#0A2E14"><div class="sw-name">Sage 300</div><div class="sw-code">#7FD98D / #A8FABB</div></div>
+    <div class="sw" style="background:var(--sage-400);color:#0A2E14"><div class="sw-name">Sage 400</div><div class="sw-code">#4EC464 / #7DF09A</div></div>
+    <div class="sw" style="background:var(--sage-500);color:#fff"><div class="sw-name">Sage 500 ★</div><div class="sw-code">#1FA24A / #5FE37F</div></div>
+    <div class="sw" style="background:var(--sage-600);color:#fff"><div class="sw-name">Sage 600</div><div class="sw-code">#157536 / #35C25E</div></div>
+  </div>
+
+  <h2>Terracotta Family</h2>
+  <div class="swatches">
+    <div class="sw" style="background:var(--clay-300);color:#361B12"><div class="sw-name">Clay 300</div><div class="sw-code">#EC9E84</div></div>
+    <div class="sw" style="background:var(--clay-400);color:#361B12"><div class="sw-name">Clay 400 ★</div><div class="sw-code">#E07856</div></div>
+    <div class="sw" style="background:var(--clay-500);color:#fff"><div class="sw-name">Clay 500</div><div class="sw-code">#C75E3D</div></div>
+    <div class="sw" style="background:var(--clay-600);color:#fff"><div class="sw-name">Clay 600</div><div class="sw-code">#A04828</div></div>
+    <div class="sw" style="background:var(--clay-700);color:#fff"><div class="sw-name">Clay 700</div><div class="sw-code">#7B3620</div></div>
+  </div>
+
+  <h2>Buttons</h2>
+  <div class="card">
+    <button class="btn btn-primary">Reveal</button>
+    <button class="btn btn-secondary">Cancel</button>
+    <button class="btn btn-success">Complete</button>
+    <button class="btn btn-accent">Alert</button>
+    <button class="btn btn-ghost">Ghost</button>
+  </div>
+
+  <h2>Status Chips</h2>
+  <div class="card">
+    <span class="chip chip-brand">Spiritual</span>
+    <span class="chip chip-success">Done</span>
+    <span class="chip chip-accent">Personal</span>
+    <span class="chip chip-champagne">New</span>
+  </div>
+
+  <h2>Typography Scale</h2>
+  <div class="card">
+    <div class="display-showcase-big">CINZEL — DISPLAY</div>
+    <p style="font-family:var(--font-body);font-size:13px;color:var(--txt2);margin-top:8px">Imperial serif. Uppercase, wide-tracked, heavy weight.</p>
+
+    <div style="font-family:var(--font-verse);font-style:italic;font-size:28px;line-height:1.4;margin-top:24px;color:var(--verse)">Cormorant Garamond — Verses</div>
+    <p style="font-family:var(--font-body);font-size:13px;color:var(--txt2);margin-top:8px">High-contrast italic serif. Scripture, quotes, reflection.</p>
+
+    <p class="body-demo" style="margin-top:24px">Inter — the working font. Clean, readable at every size.</p>
+    <p class="body-demo-sm">Secondary body text in Inter.</p>
+
+    <p style="font-family:var(--font-alt);font-size:18px;font-weight:600;margin-top:24px">DM Sans — Warmth</p>
+    <p style="font-family:var(--font-alt);font-size:13px;color:var(--txt2);margin-top:4px">Softer sans for greetings and human moments.</p>
+  </div>
+
+</div>
+</body>
+</html>

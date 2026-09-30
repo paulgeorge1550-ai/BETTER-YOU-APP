@@ -16,20 +16,15 @@
 <div id="ambient"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
 <nav id="navbar">
   <button class="nav-logo" onclick="nav('home')">BETTER<span>YOU</span></button>
-    <div class="nav-links">
-    <button class="nl" id="nav-home" onclick="nav('home')">Home</button>
-    <button class="nl" id="nav-dash" style="display:none" onclick="grd('dashboard')">Dashboard</button>
-    <button class="nl" id="nav-personal" style="display:none" onclick="grd('personal')">Personal Dev</button>
-    <button class="nl" id="nav-spiritual" style="display:none" onclick="grd('spiritual')">Spiritual Growth</button>
-    <button class="nl" id="nav-community" style="display:none" onclick="commNav()">Community</button>
-    <button class="nl" onclick="nav('about')">About</button>
-  </div>
   <div class="nav-r">
-    <button class="tbtn" id="theme-btn" onclick="toggleTheme()" data-icon="moon" data-size="16"></button>
+    <div id="nav-streak" class="nav-streak" style="display:none">
+      <span data-icon="fire" data-size="16"></span>
+      <span id="nav-streak-num">0</span>
+    </div>
     <div id="nav-guest"><button class="btn-join" onclick="nav('register')">Join Better You</button></div>
     <div id="nav-user" style="display:none">
       <button class="av-btn" id="nav-av" onclick="toggleDD(event)">B</button>
-           <div class="prof-dd" id="prof-dd">
+      <div class="prof-dd" id="prof-dd">
         <div class="dd-head">
           <div class="dd-head-av" id="dd-av">B</div>
           <div class="dd-head-info">
@@ -38,25 +33,15 @@
           </div>
         </div>
         <div class="dd-div"></div>
-        <button class="ddi" onclick="grd('dashboard');closeDD()"><span data-icon="grid" data-size="14"></span> Dashboard</button>
         <button class="ddi" onclick="grd('profile');closeDD()"><span data-icon="user" data-size="14"></span> Profile</button>
         <button class="ddi" id="dd-admin" style="display:none" onclick="nav('admin');closeDD()"><span data-icon="settings" data-size="14"></span> Admin Portal</button>
         <div class="dd-div"></div>
         <button class="ddi red" onclick="signOut();closeDD()"><span data-icon="logout" data-size="14"></span> Sign Out</button>
       </div>
     </div>
-    <button class="hbg" onclick="toggleMob()" data-icon="menu" data-size="18"></button>
   </div>
 </nav>
-<div id="mob-nav">
-  <button class="nl" id="mob-home" onclick="nav('home');closeMob()">Home</button>
-  <button class="nl" id="mob-dash" style="display:none" onclick="grd('dashboard');closeMob()">Dashboard</button>
-  <button class="nl" id="mob-personal" style="display:none" onclick="grd('personal');closeMob()">Personal Dev</button>
-  <button class="nl" id="mob-spiritual" style="display:none" onclick="grd('spiritual');closeMob()">Spiritual Growth</button>
-  <button class="nl" id="mob-community" style="display:none" onclick="commNav();closeMob()">Community</button>
-  <button class="nl" onclick="nav('about');closeMob()">About</button>
-  <button class="nl" id="mob-join" onclick="nav('register');closeMob()" style="color:var(--acc)">Join Better You →</button>
-</div>
+
 <div class="page active" id="pg-home" style="flex-direction:column">
 <section class="hero" style="padding-top:calc(var(--nav-h) + 40px)">
   <div class="container">
@@ -431,6 +416,63 @@
     <div class="dash-sec"><div class="ds-t" style="margin-bottom:12px">Streak Calendar</div><div class="cal-grid" id="prof-cal"></div></div>
   </div></div>
 </div>
+<div class="page" id="pg-more" style="flex-direction:column;flex:1">
+  <div class="page-wrap" style="flex:1"><div class="container" style="padding-bottom:100px;max-width:640px">
+    <h3 style="margin-bottom:20px">More</h3>
+    
+    <div class="more-section">
+      <div class="more-group-title">Account</div>
+      <button class="more-item" onclick="grd('profile')">
+        <span class="more-icon" data-icon="user" data-size="18"></span>
+        <span class="more-label">Profile & Stats</span>
+        <span class="more-arrow" data-icon="arrow-right" data-size="14"></span>
+      </button>
+      <button class="more-item" id="more-admin" style="display:none" onclick="nav('admin')">
+        <span class="more-icon" data-icon="settings" data-size="18"></span>
+        <span class="more-label">Admin Portal</span>
+        <span class="more-arrow" data-icon="arrow-right" data-size="14"></span>
+      </button>
+    </div>
+
+    <div class="more-section">
+      <div class="more-group-title">Support</div>
+      <button class="more-item" onclick="toast('Support coming soon','info')">
+        <span class="more-icon" data-icon="mail" data-size="18"></span>
+        <span class="more-label">Contact Support</span>
+        <span class="more-arrow" data-icon="arrow-right" data-size="14"></span>
+      </button>
+      <button class="more-item" onclick="toast('Donations coming soon','heart')">
+        <span class="more-icon" data-icon="heart" data-size="18"></span>
+        <span class="more-label">Support Better You</span>
+        <span class="more-arrow" data-icon="arrow-right" data-size="14"></span>
+      </button>
+    </div>
+
+    <div class="more-section">
+      <div class="more-group-title">About</div>
+      <button class="more-item" onclick="nav('about')">
+        <span class="more-icon" data-icon="info" data-size="18"></span>
+        <span class="more-label">About Better You</span>
+        <span class="more-arrow" data-icon="arrow-right" data-size="14"></span>
+      </button>
+      <button class="more-item" onclick="toast('Terms coming soon','info')">
+        <span class="more-icon" data-icon="scroll" data-size="18"></span>
+        <span class="more-label">Terms & Privacy</span>
+        <span class="more-arrow" data-icon="arrow-right" data-size="14"></span>
+      </button>
+    </div>
+
+    <div class="more-section" id="more-user-section" style="display:none">
+      <button class="more-item more-danger" onclick="signOut()">
+        <span class="more-icon" data-icon="logout" data-size="18"></span>
+        <span class="more-label">Sign Out</span>
+      </button>
+    </div>
+
+    <div class="more-version">Better You v1.0.0</div>
+  </div></div>
+</div>
+
 <div class="page" id="pg-admin" style="flex-direction:column">
   <div class="admin-layout" style="flex:1;padding-top:var(--nav-h)">
     <div class="admin-sb">
@@ -471,39 +513,7 @@
     </div>
   </div>
 </div>
-<footer id="site-footer">
-  <div class="container">
-    <div class="fg-grid">
-      <div>
-        <div class="fb-logo">BETTER YOU</div>
-        <p class="fb-desc">Transform Spiritually. Grow Personally. Become Better Completely. A structured ecosystem for complete transformation.</p>
-        <span class="badge">Body · Soul · Spirit</span>
-      </div>
-      <div>
-        <div class="fc-t">Platform</div>
-        <span class="fl-lk" onclick="grd('dashboard')">Dashboard</span>
-        <span class="fl-lk" onclick="grd('spiritual')">Spiritual Growth</span>
-        <span class="fl-lk" onclick="grd('personal')">Personal Dev</span>
-        <span class="fl-lk" onclick="commNav()">Community</span>
-      </div>
-      <div>
-        <div class="fc-t">Resources</div>
-        <span class="fl-lk">Bible Reading Plan</span>
-        <span class="fl-lk">Workout Programmes</span>
-        <span class="fl-lk">Book Library</span>
-        <span class="fl-lk">Life Skills</span>
-      </div>
-      <div>
-        <div class="fc-t">Company</div>
-        <span class="fl-lk" onclick="nav('about')">About</span>
-        <span class="fl-lk">Privacy Policy</span>
-        <span class="fl-lk">Terms of Service</span>
-        <span class="fl-lk">Contact</span>
-      </div>
-    </div>
-    <div class="fb-line">© 2026 Better You. All rights reserved. Transform Completely.</div>
-  </div>
-</footer>
+
 <div class="timer-ov" id="timer-ov">
   <div class="timer-box">
     <button class="tcl" onclick="closeTimer()"><span data-icon="x" data-size="16"></span></button>
@@ -574,6 +584,29 @@
     <div class="ce-picker-body" id="ce-picker-body"></div>
   </div>
 </div>
+<nav id="tab-bar" style="display:none">
+  <button class="tab-btn" data-tab="home" onclick="switchTab('home')">
+    <span class="tab-icon" data-icon="grid" data-size="22"></span>
+    <span class="tab-label">Home</span>
+  </button>
+  <button class="tab-btn" data-tab="personal" onclick="switchTab('personal')">
+    <span class="tab-icon" data-icon="dumbbell" data-size="22"></span>
+    <span class="tab-label">Personal</span>
+  </button>
+  <button class="tab-btn" data-tab="spiritual" onclick="switchTab('spiritual')">
+    <span class="tab-icon" data-icon="bible" data-size="22"></span>
+    <span class="tab-label">Spiritual</span>
+  </button>
+  <button class="tab-btn" data-tab="community" onclick="switchTab('community')">
+    <span class="tab-icon" data-icon="users" data-size="22"></span>
+    <span class="tab-label">Community</span>
+  </button>
+  <button class="tab-btn" data-tab="more" onclick="switchTab('more')">
+    <span class="tab-icon" data-icon="menu" data-size="22"></span>
+    <span class="tab-label">More</span>
+  </button>
+</nav>
+
 <div class="toast-el" id="toast-el"><span id="t-ico"></span><span id="t-msg"></span></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
