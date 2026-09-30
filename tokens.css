@@ -1,0 +1,179 @@
+/* ══════════════════════════════════════════
+   BETTER YOU — DESIGN TOKENS v1.0
+   ══════════════════════════════════════════
+   Sacred Palette. Every color, spacing, radius,
+   and timing value used across the app.
+   Loaded BEFORE styles.css. */
+
+/* ───── TYPOGRAPHY ───── */
+:root{
+  --font-display: 'Cinzel', serif;
+  --font-verse:   'Cormorant Garamond', serif;
+  --font-body:    'Inter', sans-serif;
+  --font-alt:     'DM Sans', sans-serif;
+
+  /* ───── SPACING ───── */
+  --sp-xs:  4px;
+  --sp-sm:  8px;
+  --sp-md:  12px;
+  --sp-lg:  16px;
+  --sp-xl:  24px;
+  --sp-2xl: 32px;
+  --sp-3xl: 48px;
+  --sp-4xl: 64px;
+
+  /* ───── RADIUS ───── */
+  --rs:     12px;
+  --r:      18px;
+  --r-lg:   24px;
+  --r-full: 9999px;
+
+  /* ───── SHADOWS ───── */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+  --shadow-md: 0 8px 24px rgba(0,0,0,.08);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,.12);
+
+  /* ───── TIMING ───── */
+  --t-fast:      150ms;
+  --t-base:      250ms;
+  --t-smooth:    400ms;
+  --t-slow:      600ms;
+  --t-cinematic: 1200ms;
+
+  /* ───── EASING ───── */
+  --ease-out:    cubic-bezier(.22,1,.36,1);
+  --ease-soft:   cubic-bezier(.4,0,.2,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+
+  /* ───── LAYOUT ───── */
+  --nav-h: 66px;
+  --tab-h: 72px;
+}
+
+/* ══════════════════════════════════════════
+   LIGHT MODE — Warm Parchment
+   ══════════════════════════════════════════ */
+[data-theme="light"]{
+  /* Surfaces */
+  --bg:     #F5F1E8;
+  --bg2:    #E8E2D2;
+  --bg3:    #EBE5D5;
+  --card:   #FFFFFF;
+  --card2:  #FCFAF5;
+
+  /* Borders */
+  --brd:    rgba(210,202,182,.4);
+  --brd2:   rgba(210,202,182,.7);
+
+  /* Text */
+  --txt:    #1A1814;
+  --txt2:   #5A5443;
+  --txt3:   #8B8472;
+
+  /* Gold — Primary Brand */
+  --gold-300:    #DDBB6B;
+  --gold-400:    #D9AE4A;
+  --gold-500:    #C9942F;
+  --gold-600:    #A87719;
+  --champagne:   #EFD9A8;
+  --amber:       #E8A94A;
+  --brand:       var(--gold-500);
+  --brand-soft:  var(--gold-400);
+  --brand-deep:  var(--gold-600);
+  --brand-tint:  rgba(201,148,47,.10);
+
+  /* Sage — Alive Green / Success */
+  --sage-300:      #7FD98D;
+  --sage-400:      #4EC464;
+  --sage-500:      #1FA24A;
+  --sage-600:      #157536;
+  --success:       var(--sage-500);
+  --success-soft:  var(--sage-400);
+  --success-bright: var(--sage-300);
+  --success-tint:  rgba(31,162,74,.10);
+
+  /* Terracotta — Accent / Alerts */
+  --clay-300:    #EC9E84;
+  --clay-400:    #E07856;
+  --clay-500:    #C75E3D;
+  --clay-600:    #A04828;
+  --clay-700:    #7B3620;
+  --accent:       var(--clay-600);
+  --accent-soft:  var(--clay-500);
+  --accent-tint:  rgba(160,72,40,.10);
+
+  /* Verse */
+  --verse:        #1A1814;
+  --verse-label:  #A87719;
+
+  /* Shimmer */
+  --shimmer:      rgba(255,255,255,.65);
+  --shimmer-soft: rgba(255,255,255,.15);
+}
+
+/* ══════════════════════════════════════════
+   DARK MODE — Warm Black
+   ══════════════════════════════════════════ */
+[data-theme="dark"]{
+  /* Surfaces */
+  --bg:     #12100C;
+  --bg2:    #1E1B15;
+  --bg3:    #252118;
+  --card:   #1C1914;
+  --card2:  #252118;
+
+  /* Borders */
+  --brd:    rgba(210,200,175,.09);
+  --brd2:   rgba(210,200,175,.16);
+
+  /* Text */
+  --txt:    #F0E8D8;
+  --txt2:   #A8A08E;
+  --txt3:   #7A7362;
+
+  /* Gold */
+  --gold-300:    #DDBB6B;
+  --gold-400:    #D9AE4A;
+  --gold-500:    #C9942F;
+  --gold-600:    #A87719;
+  --champagne:   #F5E6C0;
+  --amber:       #E8A94A;
+  --brand:       var(--gold-400);
+  --brand-soft:  var(--gold-300);
+  --brand-deep:  var(--gold-500);
+  --brand-tint:  rgba(217,174,74,.12);
+
+  /* Sage */
+  --sage-300:      #A8FABB;
+  --sage-400:      #7DF09A;
+  --sage-500:      #5FE37F;
+  --sage-600:      #35C25E;
+  --success:       var(--sage-500);
+  --success-soft:  var(--sage-400);
+  --success-bright: var(--sage-300);
+  --success-tint:  rgba(95,227,127,.14);
+
+  /* Terracotta */
+  --clay-300:    #EC9E84;
+  --clay-400:    #E07856;
+  --clay-500:    #C75E3D;
+  --clay-600:    #A04828;
+  --clay-700:    #7B3620;
+  --accent:       var(--clay-400);
+  --accent-soft:  var(--clay-300);
+  --accent-tint:  rgba(224,120,86,.12);
+
+  /* Verse */
+  --verse:        #F0E8D8;
+  --verse-label:  #DDBB6B;
+
+  /* Shimmer */
+  --shimmer:      rgba(245,230,192,.55);
+  --shimmer-soft: rgba(245,230,192,.10);
+}
+
+/* ══════════════════════════════════════════
+   BASE
+   ══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
