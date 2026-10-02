@@ -380,14 +380,23 @@ async function signOut(){
   nav('home'); toast('Signed out. See you tomorrow','logout');
 }
 
+// ── Streak jump animation (fires on tap or update) ──
+
+function streakJump(el){
+  if(!el) return;
+  el.classList.remove('jump');
+  void el.offsetWidth;             // restart animation
+  el.classList.add('jump');
+  if(navigator.vibrate) navigator.vibrate(20);
+  setTimeout(() => el.classList.remove('jump'), 1000);
+}
+
 function updateNavUser(){
   const li = !!user;
 
-  // Guest/user top-right buttons
   document.getElementById('nav-guest').style.display = li ? 'none' : 'block';
   document.getElementById('nav-user').style.display  = li ? 'block' : 'none';
 
-  // Desktop nav toggle
   const setVis = (id, show) => {
     const el = document.getElementById(id);
     if (el) el.style.display = show ? '' : 'none';
@@ -397,8 +406,6 @@ function updateNavUser(){
   setVis('nav-personal',   li);
   setVis('nav-spiritual',  li);
   setVis('nav-community',  li);
-
-  // Mobile nav toggle
   setVis('mob-home',      !li);
   setVis('mob-dash',       li);
   setVis('mob-personal',   li);
@@ -406,33 +413,38 @@ function updateNavUser(){
   setVis('mob-community',  li);
   setVis('mob-join',      !li);
 
-  // Populate user info when logged in
   if (user) {
     const i = user.name.charAt(0).toUpperCase();
     document.getElementById('nav-av').textContent = i;
     const sa = document.getElementById('sb-av'); if (sa) sa.textContent = i;
     const sn = document.getElementById('sb-name'); if (sn) sn.textContent = user.name;
 
-    // Dropdown header
     const ddAv = document.getElementById('dd-av'); if (ddAv) ddAv.textContent = i;
     const ddNm = document.getElementById('dd-name'); if (ddNm) ddNm.textContent = user.name;
     const ddRl = document.getElementById('dd-role'); if (ddRl) ddRl.textContent = user.isAdmin ? 'Administrator' : 'Better You Member';
 
-    // Admin buttons
     const al = document.getElementById('dd-admin'); if (al) al.style.display = user.isAdmin ? 'flex' : 'none';
     const sal = document.getElementById('sb-admin'); if (sal) sal.style.display = user.isAdmin ? 'flex' : 'none';
     const ma = document.getElementById('more-admin'); if (ma) ma.style.display = 'flex';
     const mus = document.getElementById('more-user-section'); if (mus) mus.style.display = 'block';
 
     // Streak badge in top nav
-    const ns = document.getElementById('nav-streak'); if (ns) ns.style.display = 'inline-flex';
-    const nsn = document.getElementById('nav-streak-num'); if (nsn) nsn.textContent = '7';
+    const ns = document.getElementById('nav-streak');
+    if (ns) ns.style.display = 'inline-flex';
+    const nsn = document.getElementById('nav-streak-num');
+    if (nsn) {
+      const newVal = '7';
+      const oldVal = nsn.textContent;
+      nsn.textContent = newVal;
+      if (oldVal !== newVal && oldVal !== '0' && oldVal !== '' && ns) {
+        setTimeout(() => streakJump(ns), 300);
+      }
+    }
   } else {
     const ma = document.getElementById('more-admin'); if (ma) ma.style.display = 'none';
     const mus = document.getElementById('more-user-section'); if (mus) mus.style.display = 'none';
     const ns = document.getElementById('nav-streak'); if (ns) ns.style.display = 'none';
   }
-  // Show/hide tab bar based on login state
   updateTabBarVisibility();
 }
 

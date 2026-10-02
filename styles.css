@@ -920,3 +920,203 @@ body.booting::after {
 .auth-page .container{
   padding-bottom:0 !important;
 }
+
+
+/* ══════════════════════════════════════════
+   STREAK BADGE — Flame-only float
+   ══════════════════════════════════════════ */
+
+/* Badge itself is calm — no glow, no pulse, no animation */
+.nav-streak{
+  position:relative;
+  overflow:visible;    /* lets the flame escape the border */
+}
+
+/* Remove any drop-shadow / glow on the flame permanently */
+.nav-streak svg{
+  filter:none !important;
+  transform-origin:center bottom;
+  will-change:transform;
+}
+
+/* Gentle flame breathing — always running */
+.nav-streak svg{
+  animation:flameFlicker 2.8s ease-in-out infinite;
+}
+
+@keyframes flameFlicker{
+  0%,100%{transform:scale(1) rotate(0deg);opacity:.92}
+  25%    {transform:scale(1.06) rotate(-2deg);opacity:1}
+  50%    {transform:scale(1.1) rotate(2deg);opacity:1}
+  75%    {transform:scale(1.05) rotate(-1deg);opacity:.96}
+}
+
+/* Number — subtle pulse */
+#nav-streak-num{
+  display:inline-block;
+  animation:streakPulse 3s ease-in-out infinite;
+}
+
+@keyframes streakPulse{
+  0%,100%{transform:scale(1)}
+  50%    {transform:scale(1.06)}
+}
+
+/* Flame floats UP OUT of the border, hovers, returns */
+.nav-streak.jump svg{
+  animation:flameJump .9s cubic-bezier(.34,1.56,.64,1);
+}
+
+@keyframes flameJump{
+  0%   {transform:translateY(0) scale(1)}
+  15%  {transform:translateY(4px) scale(.9)}   /* dip down */
+  35%  {transform:translateY(-6px) scale(1.15)} /* push up to top edge */
+  50%  {transform:translateY(-4px) scale(1.1)}  /* hover at edge */
+  65%  {transform:translateY(2px) scale(.95)}   /* settle back */
+  80%  {transform:translateY(-1px) scale(1.02)} /* tiny bounce */
+  100% {transform:translateY(0) scale(1)}
+}
+
+/* The flame icon — flickers and breathes */
+.nav-streak svg{
+  animation:flameFlicker 2.4s ease-in-out infinite;
+  transform-origin:center bottom;
+  filter:drop-shadow(0 0 4px var(--yellow));
+}
+
+/* Hard reset — kills any glow inherited from elsewhere */
+.nav-streak{
+  box-shadow:none !important;
+  animation:none !important;
+}
+.nav-streak svg{
+  filter:none !important;
+  -webkit-filter:none !important;
+}
+
+@keyframes flameFlicker{
+  0%,100%{
+    transform:scale(1) rotate(0deg);
+    opacity:.9;
+  }
+  25%{
+    transform:scale(1.08) rotate(-3deg);
+    opacity:1;
+  }
+  50%{
+    transform:scale(1.12) rotate(2deg);
+    opacity:1;
+  }
+  75%{
+    transform:scale(1.06) rotate(-1deg);
+    opacity:.95;
+  }
+}
+
+/* The number — subtle pulse */
+#nav-streak-num{
+  display:inline-block;
+  animation:streakPulse 3s ease-in-out infinite;
+}
+
+@keyframes streakPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.06)}
+}
+
+/* The JUMP — floats up, hovers, comes back down */
+.nav-streak.jump{
+  animation:streakJump 1.2s cubic-bezier(.34,1.56,.64,1);
+  z-index:1001;
+  position:relative;
+}
+
+@keyframes streakJump{
+  0%{
+    transform:translateY(0) scale(1);
+  }
+  20%{
+    transform:translateY(-24px) scale(1.18);
+  }
+  40%{
+    transform:translateY(-22px) scale(1.12) rotate(-4deg);
+  }
+  55%{
+    transform:translateY(-22px) scale(1.12) rotate(4deg);
+  }
+  70%{
+    transform:translateY(-20px) scale(1.1) rotate(-2deg);
+  }
+  85%{
+    transform:translateY(-4px) scale(1.02);
+  }
+  100%{
+    transform:translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+/* The flame icon — flickers and breathes */
+.nav-streak svg{
+  animation:flameFlicker 2.4s ease-in-out infinite;
+  transform-origin:center bottom;
+  filter:drop-shadow(0 0 4px var(--yellow));
+}
+
+@keyframes flameFlicker{
+  0%,100%{
+    transform:scale(1) rotate(0deg);
+    opacity:.9;
+  }
+  25%{
+    transform:scale(1.08) rotate(-3deg);
+    opacity:1;
+  }
+  50%{
+    transform:scale(1.12) rotate(2deg);
+    opacity:1;
+  }
+  75%{
+    transform:scale(1.06) rotate(-1deg);
+    opacity:.95;
+  }
+}
+
+/* The number — subtle pulse */
+#nav-streak-num{
+  display:inline-block;
+  animation:streakPulse 3s ease-in-out infinite;
+}
+
+@keyframes streakPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.06)}
+}
+
+/* The badge — soft glow that pulses */
+.nav-streak{
+  animation:streakGlow 2.8s ease-in-out infinite;
+}
+
+@keyframes streakGlow{
+  0%,100%{
+    box-shadow:0 0 0 0 rgba(57,255,20,0);
+    border-color:rgba(57,255,20,.25);
+  }
+  50%{
+    box-shadow:0 0 12px 2px rgba(57,255,20,.35);
+    border-color:rgba(57,255,20,.55);
+  }
+}
+
+/* The JUMP — fires when you tap it or when the number changes */
+.nav-streak.jump{
+  animation:streakJump .8s cubic-bezier(.34,1.56,.64,1);
+}
+
+@keyframes streakJump{
+  0%{transform:translateY(0) scale(1)}
+  25%{transform:translateY(-10px) scale(1.15)}
+  45%{transform:translateY(0) scale(.95)}
+  65%{transform:translateY(-4px) scale(1.05)}
+  100%{transform:translateY(0) scale(1)}
+}
