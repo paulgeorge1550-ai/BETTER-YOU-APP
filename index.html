@@ -2,12 +2,12 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<meta name="theme-color" content="#39FF14"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="theme-color" content="#0a0806"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>Better You — Transform Completely</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;600;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="styles.css"/>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icon-192.png"/>
@@ -42,6 +42,9 @@
   </div>
 </nav>
 
+<!-- ═══════════════════════════════════════════
+     MARKETING / HOME (guest page)
+     ═══════════════════════════════════════════ -->
 <div class="page active" id="pg-home" style="flex-direction:column">
 <section class="hero" style="padding-top:calc(var(--nav-h) + 40px)">
   <div class="container">
@@ -83,8 +86,8 @@
       <div class="snowflake" style="left:85%;--sf:5.5s;--sd2:2s;--sx:5px"></div>
       <svg class="moon-svg" viewBox="0 0 140 140" width="clamp(100px,14vw,150px)" height="clamp(100px,14vw,150px)" style="display:block;margin:20px auto 0">
         <defs>
-          <radialGradient id="mg" cx="38%" cy="34%" r="55%"><stop offset="0%" stop-color="#ffe680"/><stop offset="55%" stop-color="#FFD60A"/><stop offset="100%" stop-color="#e6a800"/></radialGradient>
-          <radialGradient id="mglow" cx="50%" cy="50%" r="50%"><stop offset="55%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(255,214,10,.16)"/></radialGradient>
+          <radialGradient id="mg" cx="38%" cy="34%" r="55%"><stop offset="0%" stop-color="#F5E6C0"/><stop offset="55%" stop-color="#D9AE4A"/><stop offset="100%" stop-color="#A87719"/></radialGradient>
+          <radialGradient id="mglow" cx="50%" cy="50%" r="50%"><stop offset="55%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(217,174,74,.16)"/></radialGradient>
         </defs>
         <circle cx="70" cy="70" r="65" fill="url(#mglow)"/>
         <circle cx="70" cy="70" r="46" fill="url(#mg)"/>
@@ -165,11 +168,11 @@
     <h2 style="margin-top:14px;margin-bottom:10px">Read With <span style="color:var(--acc)">Purpose</span></h2>
     <div class="books-grid">
       <div class="bk" onclick="glowTop(this,'yellow')">
-        <div class="bk-cover" style="background:linear-gradient(135deg,#FFD60A,#ff9500)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <div class="bk-cover" style="background:linear-gradient(135deg,#D9AE4A,#A87719)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
         <div><div class="bk-type">Spiritual · This Month</div><div class="bk-title">Mere Christianity</div><div class="bk-author">C.S. Lewis</div><div class="bk-sum">A foundational exploration of Christian faith with intellectual clarity — essential reading for every serious believer.</div><div class="pt"><div class="pf pfy" style="width:35%"></div></div><div style="display:flex;justify-content:space-between;margin-top:4px;font-size:11px;color:var(--txt2)"><span>35% complete</span><span style="color:var(--yellow);font-weight:700;cursor:pointer" onclick="toast('Opening Mere Christianity...','book')">Continue →</span></div></div>
       </div>
       <div class="bk" onclick="glowTop(this,'green')">
-        <div class="bk-cover" style="background:linear-gradient(135deg,var(--green),#00c9ff)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+        <div class="bk-cover" style="background:linear-gradient(135deg,#B8902F,#A87719)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
         <div><div class="bk-type">Personal Dev · This Month</div><div class="bk-title">Atomic Habits</div><div class="bk-author">James Clear</div><div class="bk-sum">The most practical guide to building powerful habits through small, consistent changes that compound over time.</div><div class="pt"><div class="pf" style="width:25%"></div></div><div style="display:flex;justify-content:space-between;margin-top:4px;font-size:11px;color:var(--txt2)"><span>25% complete</span><span style="color:var(--acc);font-weight:700;cursor:pointer" onclick="toast('Opening Atomic Habits...','books')">Continue →</span></div></div>
       </div>
     </div>
@@ -207,7 +210,7 @@
     <div class="testi-grid">
       <div class="tc cg"><div class="ts">★★★★★</div><p class="tq">"Better You gave me the structure I'd never found elsewhere. Spiritual and personal growth happening simultaneously — I didn't know this was truly possible."</p><div class="ta"><div class="tav" style="background:var(--green)">A</div><div><div style="font-weight:700;font-size:13px">Amara O.</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Member · 3 months</div></div></div></div>
       <div class="tc cg"><div class="ts">★★★★★</div><p class="tq">"The daily Bible tracker paired with workouts transformed my mornings entirely. I wake with purpose now. The community keeps me showing up every single day."</p><div class="ta"><div class="tav" style="background:var(--yellow);color:#111">D</div><div><div style="font-weight:700;font-size:13px">David M.</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Member · 5 months</div></div></div></div>
-      <div class="tc cg"><div class="ts">★★★★★</div><p class="tq">"None combine spiritual and personal development with this intentionality. The design is exceptional, the content is serious, the community is genuine."</p><div class="ta"><div class="tav" style="background:#4361ee">S</div><div><div style="font-weight:700;font-size:13px">Sarah K.</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Member · 2 months</div></div></div></div>
+      <div class="tc cg"><div class="ts">★★★★★</div><p class="tq">"None combine spiritual and personal development with this intentionality. The design is exceptional, the content is serious, the community is genuine."</p><div class="ta"><div class="tav" style="background:#B8902F">S</div><div><div style="font-weight:700;font-size:13px">Sarah K.</div><div style="font-size:11px;color:var(--txt2);font-weight:400">Member · 2 months</div></div></div></div>
     </div>
   </div>
 </section>
@@ -223,6 +226,10 @@
   </div>
 </div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     ABOUT
+     ═══════════════════════════════════════════ -->
 <div class="page" id="pg-about" style="flex-direction:column">
   <div class="page-wrap" style="margin-top:auto"><div class="container"><div style="max-width:680px;padding:40px 0 60px">
     <span class="badge">Our Mission</span>
@@ -232,6 +239,10 @@
     <button class="btn bp blg" onclick="nav('register')">Join Better You</button>
   </div></div></div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     REGISTER
+     ═══════════════════════════════════════════ -->
 <div class="page auth-page" id="pg-register">
   <div class="auth-wrap">
     <div class="auth-logo">BETTER YOU</div>
@@ -255,6 +266,10 @@
     </div>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     LOGIN
+     ═══════════════════════════════════════════ -->
 <div class="page auth-page" id="pg-login">
   <div class="auth-wrap">
     <div class="auth-logo">BETTER YOU</div>
@@ -275,37 +290,163 @@
     </div>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     DASHBOARD — Home
+     ═══════════════════════════════════════════ -->
 <div class="page" id="pg-dashboard" style="flex-direction:column">
-  <div class="dash-page-wrap" style="flex:1">
-    <div class="dash-sb">
-      <div class="sb-user"><div class="sb-av" id="sb-av">B</div><div class="sb-name" id="sb-name">Member</div><div class="sb-role">Better You Member</div></div>
-      <button class="sbl on" onclick="nav('dashboard')"><span class="si" data-icon="grid" data-size="14"></span> Overview</button>
-      <button class="sbl" onclick="grd('spiritual')"><span class="si" data-icon="bible" data-size="14"></span> Spiritual</button>
-      <button class="sbl" onclick="grd('personal')"><span class="si" data-icon="zap" data-size="14"></span> Personal Growth</button>
-      <button class="sbl" onclick="grd('community')"><span class="si" data-icon="users" data-size="14"></span> Community</button>
-      <button class="sbl" onclick="grd('profile')"><span class="si" data-icon="user" data-size="14"></span> Profile</button>
-      <button class="sbl" id="sb-admin" style="display:none" onclick="nav('admin')"><span class="si" data-icon="settings" data-size="14"></span> Admin Portal</button>
-      <div class="sb-streak"><div class="sk-flame" data-icon="fire" data-size="22"></div><div class="sk-n">7</div><div class="sk-l">Day Streak</div></div>
-    </div>
-    <div class="dash-main">
-      <div style="margin-bottom:20px"><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:clamp(18px,2.5vw,26px);margin-bottom:2px" id="dg">Welcome back</div><div style="font-size:12px;color:var(--txt2);font-weight:400" id="dd-date"></div><div style="font-size:12px;color:var(--acc);font-weight:700" id="dd-motiv"></div></div>
-      <div class="dd-ban">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="1.7" stroke-linecap="round" style="flex-shrink:0"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        <div><div class="dd-lbl">Daily Drive</div><div class="dd-q" id="dd-q"></div><div class="dd-ch" id="dd-ch"></div></div>
-      </div>
-      <div class="stats-row">
-        <div class="sc"><span class="sn" id="s-str">7</span><div class="sl">Day Streak</div></div>
-        <div class="sc"><span class="sn" id="s-ses">25</span><div class="sl">Sessions Done</div></div>
-        <div class="sc"><span class="sn" id="s-bk">2</span><div class="sl">Books Read</div></div>
-        <div class="sc"><span class="sn" id="s-sc" style="color:var(--yellow)">84</span><div class="sl">Growth Score</div></div>
-      </div>
-      <div class="dash-sec">
-        <div class="ds-hdr"><div class="ds-t"><span data-icon="dumbbell" data-size="15"></span>Today's Workout Preview</div><button class="btn bg-b bsm" onclick="grd('personal')">Full Plan →</button></div>
-        <div id="dash-ex-preview"></div>
+  <div class="home-wrap">
+
+    <div class="home-greet">
+      <div class="home-greet-label" id="hg-label" aria-label="greeting"></div>
+      <div class="home-greet-row">
+        <div class="home-greet-name" id="hg-name">PAUL GEORGE</div>
+        <div class="home-greet-date" id="hg-date"></div>
       </div>
     </div>
+
+    <div class="hero-card" id="hero-card">
+      <div class="hero-ambient" aria-hidden="true">
+        <div class="amb-glow amb-glow-a"></div>
+        <div class="amb-glow amb-glow-b"></div>
+        <div class="amb-dust">
+          <span class="dust d1"></span>
+          <span class="dust d2"></span>
+          <span class="dust d3"></span>
+          <span class="dust d4"></span>
+          <span class="dust d5"></span>
+          <span class="dust d6"></span>
+          <span class="dust d7"></span>
+          <span class="dust d8"></span>
+        </div>
+      </div>
+      <div class="hero-inner">
+
+        <div class="verse-section">
+          <div class="verse-head">
+            <div class="small-caps-label gold">VERSE OF THE DAY</div>
+            <div class="verse-ref" id="word-ref">ACTS 17:28</div>
+          </div>
+          <blockquote class="verse-text" id="word-text">"For in him we live and move and have our being."</blockquote>
+          <div class="verse-actions">
+            <button class="verse-action-btn" aria-label="Save" onclick="bookmarkVerse()"><span id="icon-bookmark"></span></button>
+            <button class="verse-action-btn" aria-label="Share" onclick="shareVerse()"><span id="icon-share"></span></button>
+            <button class="verse-action-btn" aria-label="More" onclick="previewToast('More coming soon')"><span id="icon-more"></span></button>
+          </div>
+        </div>
+
+        <div class="hero-divider"></div>
+
+        <div class="push-section" id="hero-push">
+          <div class="small-caps-label gold">TODAY'S PUSH</div>
+          <blockquote class="push-quote" id="push-quote">"The body achieves what the mind believes."</blockquote>
+          <div class="push-attribution">
+            <div class="push-line"></div>
+            <div class="push-author" id="push-author">NAPOLEON HILL</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Duo Row -->
+    <div class="duo-row">
+
+      <div class="duo-card duo-primary" onclick="openSpiritualTab('bible')">
+        <div class="duo-header">
+          <div class="small-caps-label">SPIRITUAL GROWTH</div>
+        </div>
+        <h3 class="duo-title" id="duo-spiritual-title">Continue Bible</h3>
+        <div class="duo-center">
+          <span class="duo-chapter" id="duo-spiritual-chapter">GENESIS 4</span>
+        </div>
+        <div class="duo-progress">
+          <div class="duo-progress-row">
+            <span>PROGRESS</span>
+            <span id="duo-progress-val">0/0</span>
+          </div>
+          <div class="duo-progress-bar">
+            <div class="duo-progress-fill" id="duo-progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+        <button class="duo-btn-filled" id="duo-spiritual-btn" onclick="event.stopPropagation();pulseSpiritualBtn()">
+          <span id="duo-spiritual-btn-label">Continue</span>
+        </button>
+      </div>
+
+      <div class="duo-card duo-secondary" onclick="openPersTab('habits')">
+        <div class="duo-header">
+          <div class="small-caps-label">PERSONAL DEV</div>
+        </div>
+        <h3 class="duo-title">Today's Habits</h3>
+        <p class="pd-count" id="pd-count">0 of 3 done</p>
+        <div class="duo-center">
+          <div class="pd-habit-line" id="pd-habit-line">
+            <span class="pd-habit-name" id="pd-habit-name">Morning Prayer</span>
+            <span class="pd-status done" id="pd-status">✓</span>
+          </div>
+        </div>
+        <div class="duo-btn-wrap">
+          <button class="duo-btn-outlined" onclick="event.stopPropagation();openPersTab('habits')">Open</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-section">
+      <div class="small-caps-label quick-title">QUICK ACTIONS</div>
+      <div class="quick-actions">
+        <button class="qa-item qa-journal" onclick="previewToast('Journal coming soon')">
+          <div class="qa-circle"><span id="icon-edit"></span></div>
+          <div class="qa-label">Journal</div>
+        </button>
+        <button class="qa-item qa-prayer" onclick="openSpiritualTab('prayer')">
+          <div class="qa-circle"><span id="icon-pray"></span></div>
+          <div class="qa-label">Prayer</div>
+        </button>
+        <button class="qa-item qa-scripture" onclick="openSpiritualTab('scripture')">
+          <div class="qa-circle"><span id="icon-bible"></span></div>
+          <div class="qa-label">Scripture</div>
+        </button>
+        <button class="qa-item qa-books" onclick="openPersTab('books')">
+          <div class="qa-circle"><span id="icon-books"></span></div>
+          <div class="qa-label">Books</div>
+        </button>
+        <button class="qa-item qa-skills" onclick="openPersTab('skills')">
+          <div class="qa-circle"><span id="icon-skill"></span></div>
+          <div class="qa-label">Skills</div>
+        </button>
+        <button class="qa-item qa-challenges" onclick="openPersTab('challenges')">
+          <div class="qa-circle"><span id="icon-trophy"></span></div>
+          <div class="qa-label">Challenges</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Today's Session -->
+    <div class="session-card" onclick="openPersTab('workout')">
+      <div class="session-video">
+        <div class="session-play"><span id="icon-play"></span></div>
+      </div>
+      <div class="session-body">
+        <div class="session-meta" id="session-meta">PUSH · 6 EXERCISES · 25 MIN</div>
+        <h3 class="session-title" id="session-title">Today's Session</h3>
+        <div class="duo-btn-wrap">
+          <button class="duo-btn-outlined" onclick="event.stopPropagation();startTodayWorkout()">
+            Start Workout
+            <span id="icon-arrow-right"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     SPIRITUAL
+     ═══════════════════════════════════════════ -->
 <div class="page" id="pg-spiritual" style="flex-direction:column">
   <div class="dash-page-wrap" style="flex:1">
     <div class="dash-sb">
@@ -321,7 +462,7 @@
       <p style="color:var(--txt2);font-size:13px;font-weight:400;margin-bottom:22px;line-height:1.7">Daily Bible reading, devotionals, prayer journaling, and scripture memory.</p>
       <div class="dash-sec">
         <div class="ds-hdr"><div class="ds-t"><span data-icon="bible" data-size="15"></span>Daily Bible Reading</div><span class="badge">7-day streak</span></div>
-        <div style="background:linear-gradient(135deg,rgba(255,214,10,.06),rgba(57,255,20,.04));border:1px solid rgba(255,214,10,.2);border-radius:var(--rs);padding:18px;margin-bottom:14px">
+        <div style="background:linear-gradient(135deg,rgba(217,174,74,.06),rgba(217,174,74,.04));border:1px solid rgba(217,174,74,.2);border-radius:var(--rs);padding:18px;margin-bottom:14px">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px;flex-wrap:wrap;gap:9px"><div><div style="font-family:'Poppins',sans-serif;font-weight:900;font-size:17px;margin-bottom:6px">Genesis 1</div><div style="font-size:13px;color:var(--txt2);font-weight:400;line-height:1.7;max-width:440px">In the beginning God created the heavens and the earth...</div></div><button class="btn by bsm" onclick="toast('Bible reading marked complete!','check')">Mark Complete</button></div>
           <div class="pt" style="height:8px"><div class="pf pfy" style="width:0.3%"></div></div>
         </div>
@@ -329,6 +470,10 @@
     </div>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     PERSONAL
+     ═══════════════════════════════════════════ -->
 <div class="page" id="pg-personal" style="flex-direction:column">
   <div class="dash-page-wrap" style="flex:1">
     <div class="dash-sb">
@@ -377,7 +522,7 @@
         <div id="habits-root"></div>
       </div>
       <div class="dash-tab" id="pt-books">
-        <div class="dash-sec"><div class="ds-hdr"><div class="ds-t"><span data-icon="books" data-size="15"></span>Personal Development Books</div></div><div class="bk" style="margin-bottom:14px"><div class="bk-cover" style="background:linear-gradient(135deg,var(--green),#00c9ff)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/></svg></div><div><div class="bk-type">Personal Dev · This Month</div><div class="bk-title">Atomic Habits</div><div class="bk-author">James Clear</div><div class="bk-sum">The most practical guide to building powerful habits through small, consistent changes.</div><div class="pt"><div class="pf" style="width:25%"></div></div></div></div></div>
+        <div class="dash-sec"><div class="ds-hdr"><div class="ds-t"><span data-icon="books" data-size="15"></span>Personal Development Books</div></div><div class="bk" style="margin-bottom:14px"><div class="bk-cover" style="background:linear-gradient(135deg,#B8902F,#A87719)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/></svg></div><div><div class="bk-type">Personal Dev · This Month</div><div class="bk-title">Atomic Habits</div><div class="bk-author">James Clear</div><div class="bk-sum">The most practical guide to building powerful habits through small, consistent changes.</div><div class="pt"><div class="pf" style="width:25%"></div></div></div></div></div>
       </div>
       <div class="dash-tab" id="pt-challenges">
         <div class="dash-sec"><div class="ds-hdr"><div class="ds-t"><span data-icon="target" data-size="15"></span>Active Challenges</div></div>
@@ -390,6 +535,10 @@
     </div>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     COMMUNITY
+     ═══════════════════════════════════════════ -->
 <div class="page" id="pg-community" style="flex-direction:column;flex:1">
   <div class="page-wrap" style="flex:1"><div class="container">
     <div class="comm-layout">
@@ -407,6 +556,10 @@
     </div>
   </div></div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     PROFILE
+     ═══════════════════════════════════════════ -->
 <div class="page" id="pg-profile" style="flex-direction:column;flex:1">
   <div class="page-wrap" style="flex:1"><div class="container" style="padding-bottom:50px">
     <div class="profile-hero">
@@ -416,10 +569,14 @@
     <div class="dash-sec"><div class="ds-t" style="margin-bottom:12px">Streak Calendar</div><div class="cal-grid" id="prof-cal"></div></div>
   </div></div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     MORE
+     ═══════════════════════════════════════════ -->
 <div class="page" id="pg-more" style="flex-direction:column;flex:1">
   <div class="page-wrap" style="flex:1"><div class="container" style="padding-bottom:100px;max-width:640px">
     <h3 style="margin-bottom:20px">More</h3>
-    
+
     <div class="more-section">
       <div class="more-group-title">Account</div>
       <button class="more-item" onclick="grd('profile')">
@@ -473,6 +630,9 @@
   </div></div>
 </div>
 
+<!-- ═══════════════════════════════════════════
+     ADMIN
+     ═══════════════════════════════════════════ -->
 <div class="page" id="pg-admin" style="flex-direction:column">
   <div class="admin-layout" style="flex:1;padding-top:var(--nav-h)">
     <div class="admin-sb">
@@ -514,6 +674,9 @@
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════
+     OVERLAYS & MODALS
+     ═══════════════════════════════════════════ -->
 <div class="timer-ov" id="timer-ov">
   <div class="timer-box">
     <button class="tcl" onclick="closeTimer()"><span data-icon="x" data-size="16"></span></button>
@@ -584,6 +747,10 @@
     <div class="ce-picker-body" id="ce-picker-body"></div>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     BOTTOM TAB BAR
+     ═══════════════════════════════════════════ -->
 <nav id="tab-bar" style="display:none">
   <button class="tab-btn" data-tab="home" onclick="switchTab('home')">
     <span class="tab-icon" data-icon="grid" data-size="22"></span>

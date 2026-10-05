@@ -6,8 +6,8 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0D0D0D",
-  "theme_color": "#39FF14",
+  "background_color": "#0a0806",
+  "theme_color": "#D9AE4A",
   "categories": ["health", "lifestyle", "education", "fitness"],
   "icons": [
     { "src": "icon.svg",             "sizes": "any",     "type": "image/svg+xml" },

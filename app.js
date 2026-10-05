@@ -16,13 +16,13 @@ bible:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 
 book:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
 books:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/>',
 scroll:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M21 16v3a2 2 0 0 1-2 2h-3"/>',
-pray:'<path d="M12 3v5"/><path d="M9 6l3-3 3 3"/><path d="M8 10c-1 1-1.5 2.5-1.5 4 0 3 1.5 6 3.5 8h4c2-2 3.5-5 3.5-8 0-1.5-.5-3-1.5-4"/>',
+pray:'<path d="M12 2v12"/><path d="M8.5 8C7 10 6 12.2 6 14.8c0 3 2.5 6 6 7.2"/><path d="M15.5 8c1.5 2 2.5 4.2 2.5 6.8 0 3-2.5 6-6 7.2"/><path d="M8.5 8L12 2l3.5 6"/>',
 edit:'<path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>',
 target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
-trophy:'<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M6 3h12v6a6 6 0 0 1-12 0z"/>',
+trophy:'<path d="M6 4h12v5a6 6 0 0 1-12 0z"/><path d="M6 5H3.5a2.5 2.5 0 0 0 0 5H6"/><path d="M18 5h2.5a2.5 2.5 0 0 1 0 5H18"/><path d="M12 15v3"/><path d="M8 21h8"/><path d="M10 18h4"/>',
 zap:'<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
 sprout:'<path d="M7 20h10"/><path d="M12 20V10"/><path d="M12 10c-3 0-6-2-6-6 3 0 6 2 6 6z"/>',
-'graduation-cap':'<path d="M22 10L12 5 2 10l10 5 10-5z"/>',
+'graduation-cap':'<path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>',
 sunrise:'<path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/>',
 'phone-off':'<path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27"/>',
 check:'<polyline points="20 6 9 17 4 12"/>',
@@ -52,9 +52,381 @@ star:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.8
 calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
 plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
 'check-square':'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+bookmark:'<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',
+share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>',
+more:'<circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/><circle cx="5" cy="12" r="1.4"/>',
 };
+
 function ico(name,size=16){const path=ICONS[name];if(!path)return '';return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`}
 function hydrateIcons(root=document){root.querySelectorAll('[data-icon]').forEach(el=>{if(el.dataset.iconDone)return;const name=el.getAttribute('data-icon');const size=parseInt(el.getAttribute('data-size'))||16;el.innerHTML=ico(name,size);el.dataset.iconDone='1'})}
+
+// ══════════════════════════════════════════════
+// DASHBOARD — Greeting, verse, push, habits, navigation
+// ══════════════════════════════════════════════
+
+const GREETINGS = {
+  morning: ['GOOD MORNING,','RISE AND SHINE,','BLESSED MORNING,','THE DAY BEGINS,','FRESH START,','WELCOME, MORNING,','BRIGHT AND EARLY,','MORNING, DEAR,'],
+  afternoon: ['GOOD AFTERNOON,','STAY THE COURSE,','KEEP GOING,','HALFWAY THERE,','PRESS ON,','STAY STRONG,','WELL DONE SO FAR,','KEEP THE FIRE,'],
+  evening: ['GOOD EVENING,','WELL DONE TODAY,','THE DAY IS DONE,','REST NOW,','GOLDEN HOUR,','SLOW DOWN,','YOU MADE IT,','PEACEFUL EVENING,'],
+  night: ['GOOD NIGHT,','REST WELL,','SLEEP SWEET,','PEACEFUL NIGHT,','SWEET DREAMS,','CLOSE THE DAY,','DREAM WELL,','REST DEAR,']
+};
+
+function getTimeBucket(){
+  const h = new Date().getHours();
+  return (h >= 5 && h < 12) ? 'morning'
+       : (h >= 12 && h < 17) ? 'afternoon'
+       : (h >= 17 && h < 22) ? 'evening'
+       : 'night';
+}
+
+function pickGreeting(){
+  const pool = GREETINGS[getTimeBucket()];
+  let last = null;
+  try { last = sessionStorage.getItem('bn_last_greet'); } catch {}
+  const options = pool.filter(g => g !== last);
+  const pick = options[Math.floor(Math.random() * options.length)] || pool[0];
+  try { sessionStorage.setItem('bn_last_greet', pick); } catch {}
+  return pick;
+}
+
+function animateGreeting(text){
+  const el = document.getElementById('hg-label');
+  if(!el) return;
+  el.innerHTML = '';
+  text.split('').forEach((ch, i) => {
+    if(ch === ' '){
+      const s = document.createElement('span');
+      s.className = 'hw-space';
+      s.innerHTML = '&nbsp;';
+      el.appendChild(s);
+      return;
+    }
+    const span = document.createElement('span');
+    span.className = 'hw-char';
+    span.textContent = ch;
+    span.style.animationDelay = (i * 42) + 'ms';
+    el.appendChild(span);
+  });
+}
+
+let greetingTimer = null;
+function startGreetingRotation(){
+  clearInterval(greetingTimer);
+  greetingTimer = setInterval(() => {
+    if (document.visibilityState === 'visible') {
+      animateGreeting(pickGreeting());
+    }
+  }, 20000);
+}
+
+const PUSH_QUOTES = [
+  { quote:'"The body achieves what the mind believes."', author:'NAPOLEON HILL' },
+  { quote:'"We are what we repeatedly do. Excellence, then, is not an act but a habit."', author:'ARISTOTLE' },
+  { quote:'"Discipline is the bridge between goals and accomplishment."', author:'JIM ROHN' },
+  { quote:'"The pain you feel today will be the strength you feel tomorrow."', author:'ARNOLD SCHWARZENEGGER' },
+  { quote:'"Success is the sum of small efforts repeated day in and day out."', author:'ROBERT COLLIER' },
+  { quote:'"You are never too old to set another goal or dream a new dream."', author:'C.S. LEWIS' },
+  { quote:'"Rest and renewal are acts of discipline, not weakness."', author:'ANONYMOUS' }
+];
+
+function getTodayHabits(){
+  if(!user) return [];
+  const today = todayStr();
+  return getHabits().filter(h => isHabitScheduledOn(h, today));
+}
+
+function getHabitsDoneToday(){
+  if(!user) return [];
+  const today = todayStr();
+  const logs = getHabitLogs();
+  return getTodayHabits().filter(h => {
+    const log = logs[hLogKey(h.id, today)];
+    return log && log.status === 'completed';
+  });
+}
+
+let activeHabitList = [];
+let habitIdx = 0;
+
+function updateHabitCount(){
+  const total = getTodayHabits().length;
+  const done  = getHabitsDoneToday().length;
+  const el = document.getElementById('pd-count');
+  if(!el) return;
+  if(total === 0) el.textContent = 'No habits today';
+  else el.textContent = done + ' of ' + total + ' done';
+}
+
+function setHabitDisplay(idx){
+  const list = activeHabitList;
+  const h = list[idx];
+  const nameEl = document.getElementById('pd-habit-name');
+  const statusEl = document.getElementById('pd-status');
+  if(!nameEl || !statusEl) return;
+
+  if(!h){
+    nameEl.textContent = 'All done for today';
+    statusEl.className = 'pd-status done';
+    statusEl.textContent = '✓';
+    return;
+  }
+
+  nameEl.textContent = h.name;
+  const today = todayStr();
+  const log = getHabitLog(h.id, today);
+  const isDone = log && log.status === 'completed';
+
+  if(isDone){
+    statusEl.className = 'pd-status done';
+    statusEl.textContent = '✓';
+  } else {
+    statusEl.className = 'pd-status pending';
+    statusEl.textContent = '?';
+  }
+}
+
+function initHabitRotation(){
+  activeHabitList = getTodayHabits();
+  habitIdx = 0;
+  const today = todayStr();
+  activeHabitList.sort((a, b) => {
+    const aDone = getHabitLog(a.id, today)?.status === 'completed' ? 1 : 0;
+    const bDone = getHabitLog(b.id, today)?.status === 'completed' ? 1 : 0;
+    return aDone - bDone;
+  });
+  setHabitDisplay(0);
+}
+
+let habitRotTimer = null;
+function startHabitRotation(){
+  clearInterval(habitRotTimer);
+  habitRotTimer = setInterval(() => {
+    if (document.visibilityState !== 'visible') return;
+    if (!activeHabitList.length) return;
+    const lineEl = document.getElementById('pd-habit-line');
+    if(!lineEl) return;
+    lineEl.classList.add('fading');
+    setTimeout(() => {
+      habitIdx = (habitIdx + 1) % activeHabitList.length;
+      setHabitDisplay(habitIdx);
+      lineEl.classList.remove('fading');
+    }, 400);
+  }, 6000);
+}
+
+// ── Default habits seed (shown once on first dashboard visit) ──
+function seedDefaultHabits(){
+  if(!user) return false;
+  const existing = getHabits();
+  if(existing.length > 0) return false;
+  const today = todayStr();
+  const now = Date.now();
+  const defaults = [
+    { id: 'h_seed_1_' + now, name: 'Make Your Bed',   type: 'yesno', color: '#D9AE4A', question: '', unit: '', target: null, targetCondition: 'atleast', frequency: { type: 'daily', x: 1, y: 1, startDate: today }, reminder: { enabled: false, days: {} }, notes: '', active: true, createdAt: now, updatedAt: now, _seeded: true },
+    { id: 'h_seed_2_' + now, name: 'Plan the Day',    type: 'yesno', color: '#DDBB6B', question: '', unit: '', target: null, targetCondition: 'atleast', frequency: { type: 'daily', x: 1, y: 1, startDate: today }, reminder: { enabled: false, days: {} }, notes: '', active: true, createdAt: now, updatedAt: now, _seeded: true },
+    { id: 'h_seed_3_' + now, name: 'Morning Workout', type: 'yesno', color: '#B8902F', question: '', unit: '', target: null, targetCondition: 'atleast', frequency: { type: 'daily', x: 1, y: 1, startDate: today }, reminder: { enabled: false, days: {} }, notes: '', active: true, createdAt: now, updatedAt: now, _seeded: true }
+  ];
+  saveHabits(defaults);
+  setHabitLog(defaults[0].id, today, { status: 'completed', value: null, note: '' });
+  setHabitLog(defaults[1].id, today, { status: 'completed', value: null, note: '' });
+  return true;
+}
+
+// ── Replace seeded habits when user creates their first real habit ──
+function clearSeededHabits(){
+  if(!user) return;
+  const habits = getHabits();
+  const seeded = habits.filter(h => h._seeded);
+  if(!seeded.length) return;
+  const remaining = habits.filter(h => !h._seeded);
+  saveHabits(remaining);
+  // Clean up their logs too
+  const logs = getHabitLogs();
+  let changed = false;
+  seeded.forEach(h => {
+    Object.keys(logs).forEach(k => {
+      if(k.startsWith(h.id + '_')){
+        delete logs[k];
+        changed = true;
+      }
+    });
+  });
+  if(changed) saveHabitLogs(logs);
+}
+
+const DEFAULT_BIBLE_PLAN = { book: 'Genesis', chapter: 4, chaptersRead: 3, totalChapters: 1189 };
+
+function getBiblePlan(){
+  if(!user) return DEFAULT_BIBLE_PLAN;
+  return gs('bn_bible_plan_' + user.email, DEFAULT_BIBLE_PLAN);
+}
+
+function renderSpiritualCard(){
+  const plan = getBiblePlan();
+  const chapterEl = document.getElementById('duo-spiritual-chapter');
+  const titleEl   = document.getElementById('duo-spiritual-title');
+  const valEl     = document.getElementById('duo-progress-val');
+  const fillEl    = document.getElementById('duo-progress-fill');
+  const btnEl     = document.getElementById('duo-spiritual-btn-label');
+
+  if(chapterEl) chapterEl.textContent = (plan.book + ' ' + plan.chapter).toUpperCase();
+  if(titleEl)   titleEl.textContent   = plan.chaptersRead > 0 ? 'Continue Bible' : 'Begin Bible';
+  if(valEl)     valEl.textContent     = plan.chaptersRead + '/' + plan.totalChapters;
+  if(fillEl)    fillEl.style.width    = Math.min(100, (plan.chaptersRead / plan.totalChapters) * 100) + '%';
+  if(btnEl)     btnEl.textContent     = plan.chaptersRead > 0 ? 'Continue' : 'Begin';
+}
+
+function getTodayWorkout(){
+  const day  = new Date().getDay();
+  const diff = difficulty === 'custom' ? 'beginner' : difficulty;
+  return WORKOUTS[diff]?.[day] || WORKOUTS.beginner[day];
+}
+
+function renderSessionCard(){
+  const w = getTodayWorkout();
+  if(!w) return;
+  const metaEl  = document.getElementById('session-meta');
+  const titleEl = document.getElementById('session-title');
+
+  if(metaEl){
+    if(w.isRest){
+      metaEl.textContent = 'REST DAY · RECOVERY';
+    } else {
+      const exCount = (w.exs || []).length;
+      metaEl.textContent = w.tag.toUpperCase() + ' · ' + exCount + ' EXERCISES · 25 MIN';
+    }
+  }
+  if(titleEl){
+    titleEl.textContent = w.isRest ? w.tag : (w.tag + ' Session');
+  }
+}
+
+// ── Navigation shortcuts: toast then navigate ──
+function openPersTab(tab){
+  if(!user) return;
+  const labels = {
+    workout:    'Opening Workouts',
+    skills:     'Opening Life Skills',
+    habits:     'Opening Habits',
+    books:      'Opening Books',
+    challenges: 'Opening Challenges'
+  };
+  previewToast(labels[tab] || 'Opening Personal');
+  if(navigator.vibrate) navigator.vibrate(10);
+  setTimeout(() => {
+    nav('personal');
+    setTimeout(() => {
+      const btn = document.querySelector('#pg-personal .sbl[data-tab="' + tab + '"]');
+      if(btn) showPersTab(tab, btn);
+    }, 80);
+  }, 260);
+}
+
+function openSpiritualTab(tab){
+  if(!user) return;
+  const labels = {
+    bible:      'Opening Bible Reading',
+    prayer:     'Opening Prayer Journal',
+    devotionals:'Opening Devotionals',
+    scripture:  'Opening Scripture',
+    spbooks:    'Opening Spiritual Books'
+  };
+  previewToast(labels[tab] || 'Opening Spiritual');
+  if(navigator.vibrate) navigator.vibrate(10);
+  setTimeout(() => {
+    nav('spiritual');
+    setTimeout(() => {
+      const btn = document.querySelector('#pg-spiritual .sbl[data-tab="' + tab + '"]');
+      if(btn) showSpiritualTab(btn);
+    }, 80);
+  }, 260);
+}
+
+function startTodayWorkout(){
+  const w = getTodayWorkout();
+  if(!w) return;
+  if(w.isRest){
+    previewToast('Rest day — recovery is progress');
+    return;
+  }
+  previewToast("Starting today's workout");
+  if(navigator.vibrate) navigator.vibrate(20);
+  setTimeout(() => {
+    nav('personal');
+    setTimeout(() => {
+      const btn = document.querySelector('#pg-personal .sbl[data-tab="workout"]');
+      if(btn) showPersTab('workout', btn);
+      selDay = new Date().getDay();
+      activeExIdx = -1;
+      buildWeekTabs();
+      renderExCards();
+      startSession();
+    }, 100);
+  }, 300);
+}
+
+function bookmarkVerse(){
+  if(!user) return;
+  const v = WORD_VERSES[new Date().getDay() % WORD_VERSES.length];
+  const saved = gs('bn_saved_verses_' + user.email, []);
+  if(saved.find(x => x.ref === v.ref && x.text === v.text)){
+    previewToast('Already saved');
+    return;
+  }
+  saved.unshift({ ...v, savedAt: Date.now() });
+  ss('bn_saved_verses_' + user.email, saved);
+  if(navigator.vibrate) navigator.vibrate(15);
+  previewToast('Verse saved');
+}
+
+function shareVerse(){
+  const v = WORD_VERSES[new Date().getDay() % WORD_VERSES.length];
+  const text = v.text + ' — ' + v.ref;
+  if(navigator.share){
+    navigator.share({ title: 'Verse of the Day', text }).catch(() => {});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(() => previewToast('Verse copied'));
+  } else {
+    previewToast('Sharing not supported');
+  }
+}
+
+function pulseSpiritualBtn(){
+  const btn = document.getElementById('duo-spiritual-btn');
+  if(!btn) return;
+  btn.classList.remove('btn-pulse');
+  void btn.offsetWidth;
+  btn.classList.add('btn-pulse');
+  if(navigator.vibrate) navigator.vibrate(15);
+  setTimeout(() => {
+    btn.classList.remove('btn-pulse');
+    openSpiritualTab('bible');
+  }, 550);
+}
+
+function previewToast(msg){
+  if(typeof toast === 'function'){ toast(msg, 'check'); return; }
+  let el = document.getElementById('preview-toast');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'preview-toast';
+    el.style.cssText = 'position:fixed;bottom:96px;left:50%;transform:translate(-50%,80px);background:#1c1812;border:1px solid rgba(217,174,74,.4);border-radius:14px;padding:12px 22px;font-family:Inter,sans-serif;font-size:13px;color:#F0E8D8;opacity:0;transition:all .35s cubic-bezier(.22,1,.36,1);pointer-events:none;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5)';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.transform = 'translate(-50%, 0)';
+  el.style.opacity = '1';
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => {
+    el.style.transform = 'translate(-50%, 80px)';
+    el.style.opacity = '0';
+  }, 2200);
+}
+
+// ══════════════════════════════════════════════
+// LIFE SKILLS
+// ══════════════════════════════════════════════
+
 const LIFE_SKILLS=[
   {cat:'Communication',name:'Public Speaking',desc:'Command attention and deliver ideas with clarity and confidence.',icon:'mic'},
   {cat:'Communication',name:'Storytelling',desc:'Communicate through compelling narratives that move and inspire people.',icon:'book'},
@@ -71,6 +443,11 @@ function renderSkillsGrid(targetId){
   el.innerHTML=LIFE_SKILLS.map(s=>`<div class="ls-box" onclick="glowTop(this,'green');toast('Opening ${s.name}','${s.icon}')"><div class="ls-ico"><span data-icon="${s.icon}" data-size="24" style="color:var(--acc)"></span></div><div class="ls-cat-label">${s.cat}</div><div class="ls-nm">${s.name}</div><div class="ls-desc">${s.desc}</div></div>`).join('');
   hydrateIcons(el);
 }
+
+// ══════════════════════════════════════════════
+// WORKOUT DATA
+// ══════════════════════════════════════════════
+
 const WORKOUTS={
   beginner:{
     0:{label:'Sunday',tag:'Rest & Stretch',isRest:true,restDesc:'Full Body Stretch — 15 minutes of gentle stretching for the whole body.'},
@@ -205,6 +582,7 @@ const WORKOUTS={
     ]},
   }
 };
+
 const DAILY_DRIVES=[
   {q:'"I can do all things through Christ who strengthens me." — Philippians 4:13',c:'Complete your full session without skipping a single set.'},
   {q:'"Do not grow weary in doing good, for in due season you will reap." — Galatians 6:9',c:'Add one extra rep to every set today.'},
@@ -214,11 +592,14 @@ const DAILY_DRIVES=[
   {q:'"Excellence is not a singular act but a habit." — Aristotle',c:'Perfect form on every single rep today.'},
   {q:'"Rest and renewal are acts of discipline, not weakness."',c:'Stretch mindfully for 25 uninterrupted minutes.'},
 ];
+
 const MOTIVATIONS=['Transformation begins with one disciplined day.','Your consistency builds character.','Discipline is choosing what you want most.','Small daily improvements create extraordinary results.'];
+
 const COMM_SEED=[
-  {id:1,author:'Amara O.',init:'A',col:'#39FF14',text:'Completed Bible reading AND my full workout this morning!',time:'2 mins ago',r:{l:34,f:28,h:19,c:14},mine:null,comments:[]},
-  {id:2,author:'David M.',init:'D',col:'#FFD60A',text:'Week 8 done. First 3 clean sets of pull-ups without assistance.',time:'18 mins ago',r:{l:47,f:33,h:29,c:21},mine:null,comments:['Incredible David!']},
+  {id:1,author:'Amara O.',init:'A',col:'#D9AE4A',text:'Completed Bible reading AND my full workout this morning!',time:'2 mins ago',r:{l:34,f:28,h:19,c:14},mine:null,comments:[]},
+  {id:2,author:'David M.',init:'D',col:'#B8902F',text:'Week 8 done. First 3 clean sets of pull-ups without assistance.',time:'18 mins ago',r:{l:47,f:33,h:29,c:21},mine:null,comments:['Incredible David!']},
 ];
+
 let user=null,exProg={},regG='male',commPosts=[...COMM_SEED];
 let tSec=0,tTotal=0,tInt=null,timerOnEnd=null;
 let selDay=new Date().getDay(),difficulty='beginner',activeExIdx=-1;
@@ -232,7 +613,7 @@ let ytLinks=gs('bn_yt_links',{});
 const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAY_FULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-// ── TAB BAR (Phase 1 structure) ──
+// ── TAB BAR ──
 const TAB_MAP = {
   home:      {loggedIn:'dashboard', guest:'home'},
   personal:  {loggedIn:'personal',  guest:'register'},
@@ -275,11 +656,9 @@ function updateTabBarVisibility(){
 }
 
 function nav(pg){
-  // Auto-route logged-in users away from marketing pages
   if (user && (pg === 'home' || pg === 'login' || pg === 'register')) {
     pg = 'dashboard';
   }
-  // Highlight the matching tab (if tab bar exists)
   const tabName = PAGE_TO_TAB[pg];
   if (tabName) setActiveTab(tabName);
 
@@ -380,12 +759,10 @@ async function signOut(){
   nav('home'); toast('Signed out. See you tomorrow','logout');
 }
 
-// ── Streak jump animation (fires on tap or update) ──
-
 function streakJump(el){
   if(!el) return;
   el.classList.remove('jump');
-  void el.offsetWidth;             // restart animation
+  void el.offsetWidth;
   el.classList.add('jump');
   if(navigator.vibrate) navigator.vibrate(20);
   setTimeout(() => el.classList.remove('jump'), 1000);
@@ -428,7 +805,6 @@ function updateNavUser(){
     const ma = document.getElementById('more-admin'); if (ma) ma.style.display = 'flex';
     const mus = document.getElementById('more-user-section'); if (mus) mus.style.display = 'block';
 
-    // Streak badge in top nav
     const ns = document.getElementById('nav-streak');
     if (ns) ns.style.display = 'inline-flex';
     const nsn = document.getElementById('nav-streak-num');
@@ -448,7 +824,6 @@ function updateNavUser(){
   updateTabBarVisibility();
 }
 
-// ── BOOT: Restore session, then route ──
 (async function boot() {
   document.body.classList.add('booting');
 
@@ -789,7 +1164,7 @@ function openCong(){
   logSession();
   const ov=document.getElementById('cong-ov');ov.classList.add('open');
   const box=document.getElementById('cong-box');
-  const cols=['#39FF14','#FFD60A','#ff6b6b','#60a5fa','#c77dff'];
+  const cols=['#D9AE4A','#DDBB6B','#B8902F','#A87719','#F5E6C0'];
   for(let i=0;i<20;i++){
     const c=document.createElement('div');c.className='confetti';
     c.style.cssText=`left:${Math.random()*100}%;top:${-25+Math.random()*40}px;background:${cols[Math.floor(Math.random()*cols.length)]};width:${5+Math.random()*6}px;height:${5+Math.random()*6}px;animation-delay:${Math.random()*1.5}s;animation-duration:${2.5+Math.random()*1.5}s;border-radius:${Math.random()>.5?'50%':'2px'}`;
@@ -1132,25 +1507,62 @@ function ceFormSave(){
     }
   }
 }
+
+// ══════════════════════════════════════════
+// HOME / DASHBOARD — render
+// ══════════════════════════════════════════
+
+const WORD_VERSES = [
+  { text:'"For in him we live and move and have our being."',                       ref:'ACTS 17:28' },
+  { text:'"I can do all things through Christ who strengthens me."',                ref:'PHILIPPIANS 4:13' },
+  { text:'"The Lord is my shepherd; I shall not want."',                            ref:'PSALM 23:1' },
+  { text:'"Be still, and know that I am God."',                                     ref:'PSALM 46:10' },
+  { text:'"Trust in the Lord with all your heart, and lean not on your own understanding."', ref:'PROVERBS 3:5' },
+  { text:'"Your word is a lamp to my feet and a light to my path."',                ref:'PSALM 119:105' },
+  { text:'"Come to me, all who are weary and burdened, and I will give you rest."', ref:'MATTHEW 11:28' },
+];
+
 function renderDash(){
-  if(!user)return;
-  const now=new Date();
-  document.getElementById('dg').textContent='Welcome back, '+user.name;
-  document.getElementById('dd-date').textContent=now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  const dd=DAILY_DRIVES[now.getDay()]||DAILY_DRIVES[0];
-  document.getElementById('dd-q').textContent='"'+dd.q+'"';
-  document.getElementById('dd-ch').textContent='Today\'s Challenge: '+dd.c;
-  document.getElementById('dd-motiv').textContent='"'+MOTIVATIONS[now.getDay()%MOTIVATIONS.length]+'"';
-  animC(document.getElementById('s-str'),7);
-  animC(document.getElementById('s-ses'),25);
-  animC(document.getElementById('s-bk'),2);
-  animC(document.getElementById('s-sc'),84);
-  const tod=WORKOUTS[difficulty]?.[now.getDay()]||WORKOUTS.beginner[now.getDay()];
-  const el=document.getElementById('dash-ex-preview');if(!el)return;
-  if(tod.isRest){el.innerHTML=`<div style="background:var(--bg3);border-radius:12px;padding:18px;text-align:center"><div style="display:flex;justify-content:center;color:var(--acc);margin-bottom:7px">${ico('leaf',26)}</div><div style="font-weight:700;margin-bottom:4px">${tod.tag}</div><p style="font-size:12px;color:var(--txt2);font-weight:400">${tod.restDesc}</p></div>`;return}
-  const exs=getDayExercises(difficulty==='custom'?'beginner':difficulty,now.getDay());
-  el.innerHTML=exs.slice(0,3).map(ex=>`<div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border-radius:10px;padding:10px 13px;margin-bottom:8px"><div style="font-size:13px;font-weight:700">${escapeHtml(ex.name)}</div><div style="font-size:11px;color:var(--acc);font-weight:700">${ex.reps}</div></div>`).join('')+`<button class="btn bp bsm" style="margin-top:7px;width:100%" onclick="grd('personal')">View Full Workout →</button>`;
+  if (!user) return;
+  seedDefaultHabits();
+  const now = new Date();
+
+  // Greeting
+  animateGreeting(pickGreeting());
+  const nameEl = document.getElementById('hg-name');
+  if (nameEl) nameEl.textContent = (user.name || 'Friend').toUpperCase();
+  const dateEl = document.getElementById('hg-date');
+  if (dateEl) {
+    dateEl.textContent = now.toLocaleDateString('en-US',{
+      weekday:'long', month:'long', day:'numeric'
+    });
+  }
+
+  // Hero time-of-day palette
+  const heroCard = document.getElementById('hero-card');
+  if (heroCard) heroCard.setAttribute('data-time', getTimeBucket());
+
+  // Verse of the day
+  const v = WORD_VERSES[now.getDay() % WORD_VERSES.length];
+  const wText = document.getElementById('word-text');
+  const wRef  = document.getElementById('word-ref');
+  if (wText) wText.textContent = v.text;
+  if (wRef)  wRef.textContent  = v.ref;
+
+  // Push
+  const p = PUSH_QUOTES[now.getDay() % PUSH_QUOTES.length];
+  const pQuote  = document.getElementById('push-quote');
+  const pAuthor = document.getElementById('push-author');
+  if (pQuote)  pQuote.textContent  = p.quote;
+  if (pAuthor) pAuthor.textContent = p.author;
+
+  // Live data from the rest of the system
+  renderSpiritualCard();
+  updateHabitCount();
+  initHabitRotation();
+  renderSessionCard();
 }
+
 function animC(el,target){if(!el||isNaN(target))return;let c=0;const step=Math.ceil(target/55);const t=setInterval(()=>{c=Math.min(c+step,target);el.textContent=c.toLocaleString();if(c>=target)clearInterval(t)},22)}
 const counted=new Set();
 const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting&&!counted.has(e.target)){counted.add(e.target);animC(e.target,parseInt(e.target.getAttribute('data-count')))}})},{threshold:.3});
@@ -1168,12 +1580,12 @@ function renderFeed(){
     return `<div class="post-card" id="pc-${p.id}"><div class="ph"><div class="pav" style="background:${p.col}">${p.init}</div><div><div class="pnm">${p.author}</div><div class="ptm">${p.time}</div></div></div><div class="pbody">${escapeHtml(p.text)}</div><div class="rr"><button class="rb${p.mine==='l'?' on':''}" onclick="react(${p.id},'l')">${ico('thumbs-up',13)} ${p.r.l}</button><button class="rb${p.mine==='f'?' on':''}" onclick="react(${p.id},'f')">${ico('fire',13)} ${p.r.f}</button><button class="rb${p.mine==='h'?' on':''}" onclick="react(${p.id},'h')">${ico('heart',13)} ${p.r.h}</button><button class="rb${p.mine==='c'?' on':''}" onclick="react(${p.id},'c')">${ico('clap',13)} ${p.r.c}</button></div><div class="pa"><button class="pab" onclick="toggleCB(${p.id})">Comment</button>${own?`<button class="pab danger" onclick="delPost(${p.id})">Delete</button>`:''}</div><div class="cb-box" id="cb-${p.id}"><div class="cb-row"><input class="cb-inp" id="ci-${p.id}" placeholder="Write a reply..." onkeydown="if(event.key==='Enter')submitC(${p.id})"/><button class="cb-send" onclick="submitC(${p.id})">Send</button></div><div class="cb-list">${cs}</div></div></div>`;
   }).join('');
 }
-function createPost(){const ta=document.getElementById('post-input');const t=ta.value.trim();if(!t)return toast('Please write something.','warning');const cols=['#39FF14','#FFD60A','#4361ee','#c77dff','#e76f51'];commPosts.unshift({id:Date.now(),author:user.name,init:user.name.charAt(0).toUpperCase(),col:cols[Math.floor(Math.random()*cols.length)],text:t,time:'Just now',r:{l:0,f:0,h:0,c:0},mine:null,comments:[]});ta.value='';renderFeed();toast('Shared!','rocket')}
+function createPost(){const ta=document.getElementById('post-input');const t=ta.value.trim();if(!t)return toast('Please write something.','warning');const cols=['#D9AE4A','#DDBB6B','#B8902F','#A87719','#F5E6C0'];commPosts.unshift({id:Date.now(),author:user.name,init:user.name.charAt(0).toUpperCase(),col:cols[Math.floor(Math.random()*cols.length)],text:t,time:'Just now',r:{l:0,f:0,h:0,c:0},mine:null,comments:[]});ta.value='';renderFeed();toast('Shared!','rocket')}
 function react(id,type){const p=commPosts.find(p=>p.id===id);if(!p)return;if(p.mine===type){p.r[type]--;p.mine=null}else{if(p.mine)p.r[p.mine]--;p.r[type]++;p.mine=type}renderFeed()}
 function toggleCB(id){const el=document.getElementById('cb-'+id);if(el){el.style.display=el.style.display==='block'?'none':'block';document.getElementById('ci-'+id)?.focus()}}
 function submitC(id){const inp=document.getElementById('ci-'+id);if(!inp)return;const t=inp.value.trim();if(!t)return;const p=commPosts.find(p=>p.id===id);if(!p)return;p.comments.push({a:user.name,t});renderFeed();setTimeout(()=>{const cb=document.getElementById('cb-'+id);if(cb)cb.style.display='block'},50)}
 function delPost(id){if(!confirm('Delete this post?'))return;commPosts=commPosts.filter(p=>p.id!==id);renderFeed();toast('Deleted','trash')}
-function renderMembers(){const el=document.getElementById('top-members');if(!el)return;const ms=[{n:'Amara O.',s:21,c:'#39FF14'},{n:'David M.',s:18,c:'#FFD60A'},{n:'Sarah K.',s:15,c:'#4361ee'}];el.innerHTML=ms.map(m=>`<div class="mi"><div class="mav" style="background:${m.c};color:${m.c==='#FFD60A'||m.c==='#39FF14'?'#111':'#fff'}">${m.n.charAt(0)}</div><div><div class="mn">${m.n}</div><div class="ms">${ico('fire',11)} ${m.s}-day streak</div></div></div>`).join('')}
+function renderMembers(){const el=document.getElementById('top-members');if(!el)return;const ms=[{n:'Amara O.',s:21,c:'#D9AE4A'},{n:'David M.',s:18,c:'#B8902F'},{n:'Sarah K.',s:15,c:'#A87719'}];el.innerHTML=ms.map(m=>`<div class="mi"><div class="mav" style="background:${m.c};color:${m.c==='#B8902F'||m.c==='#D9AE4A'?'#111':'#fff'}">${m.n.charAt(0)}</div><div><div class="mn">${m.n}</div><div class="ms">${ico('fire',11)} ${m.s}-day streak</div></div></div>`).join('')}
 function renderProfile(){
   if(!user)return;
   const n=document.getElementById('prof-name');if(n)n.textContent=user.name;
@@ -1188,7 +1600,7 @@ async function renderAdmin(){
   try {
     const us = await cloudGetAllProfiles();
     tb.innerHTML = us.length
-      ? us.map(u=>`<tr><td>${escapeHtml(u.name)}</td><td>${escapeHtml(u.email)}</td><td><span style="background:rgba(57,255,20,.12);color:var(--acc);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700">${u.is_admin?'Admin':'Active'}</span></td></tr>`).join('')
+      ? us.map(u=>`<tr><td>${escapeHtml(u.name)}</td><td>${escapeHtml(u.email)}</td><td><span style="background:rgba(217,174,74,.12);color:var(--acc);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700">${u.is_admin?'Admin':'Active'}</span></td></tr>`).join('')
       : `<tr><td colspan="3" style="text-align:center;color:var(--txt2);padding:20px">No registered users yet</td></tr>`;
   } catch {
     tb.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--txt2);padding:20px">Could not load users</td></tr>`;
@@ -1196,7 +1608,6 @@ async function renderAdmin(){
   renderYTManager();
   document.querySelectorAll('#panel-adash .cnt').forEach(el=>animC(el,parseInt(el.getAttribute('data-count'))));
 }
-
 function renderYTManager(){
   const cont=document.getElementById('yt-manager-list');if(!cont)return;
   const allEx=[];
@@ -1254,7 +1665,12 @@ function aPanel(id,e){
   if(e?.currentTarget)e.currentTarget.classList.add('on');
   if(id==='apublic')renderAdminPublicList();
 }
-const HABIT_COLORS=['#39FF14','#FFD60A','#FF6B6B','#60A5FA','#C77DFF','#F97316','#10B981','#EC4899','#8B5CF6','#06B6D4','#F59E0B','#84CC16','#EF4444','#3B82F6','#A855F7','#14B8A6','#F472B6','#6366F1','#22C55E','#FB7185'];
+
+// ══════════════════════════════════════════
+// HABITS
+// ══════════════════════════════════════════
+
+const HABIT_COLORS=['#D9AE4A','#DDBB6B','#E28E8E','#7BA8E8','#B690E0','#D9A24E','#7FCFA0','#E28E8E','#B690E0','#6FC4D4','#D9A24E','#7FCFA0','#E28E8E','#7BA8E8','#B690E0','#6FC4D4','#E28E8E','#7BA8E8','#7FCFA0','#E28E8E'];
 const HABIT_STATUS_CYCLE=['unanswered','completed','missed','cancelled'];
 let hView='day',hDetailId=null,hSelDate=null,hForm=null,hFormMode='create',hLogHabitId=null,hLongPressTimer=null,hMenuHabitId=null;
 function todayStr(){return fmtDate(new Date())}
@@ -1430,7 +1846,7 @@ function habitTapStatus(e,id){
 function celebrateHabit(el,color){
   if(!el)return;
   const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
-  const palette=[color,'#FFD60A','#39FF14','#ffffff','#60A5FA'];
+  const palette=[color,'#D9AE4A','#DDBB6B','#ffffff','#7BA8E8'];
   for(let i=0;i<14;i++){
     const p=document.createElement('div');p.className='habit-burst';
     const angle=(i/14)*Math.PI*2+(Math.random()-0.5)*0.6;
@@ -1512,17 +1928,34 @@ function habitSaveForm(){
   const clean=JSON.parse(JSON.stringify(hForm));
   clean.name=clean.name.trim();clean.question=(clean.question||'').trim();clean.unit=(clean.unit||'').trim();clean.notes=(clean.notes||'').trim();
   if(clean.type==='measurable'&&clean.target!==''&&clean.target!=null)clean.target=Number(clean.target);else if(clean.type==='measurable')clean.target=null;
-  if(hFormMode==='edit'&&clean.id){const i=habits.findIndex(x=>x.id===clean.id);if(i>=0){clean.updatedAt=now;habits[i]=clean}}
-  else{clean.id='h_'+now+'_'+Math.random().toString(36).slice(2,7);clean.createdAt=now;clean.updatedAt=now;clean.active=true;habits.push(clean)}
-  saveHabits(habits);habitCloseForm();renderHabits();
-  toast(hFormMode==='edit'?'Habit updated':'Habit created','check');
+  if(hFormMode==='edit'&&clean.id){
+    const i=habits.findIndex(x=>x.id===clean.id);
+    if(i>=0){clean.updatedAt=now;habits[i]=clean}
+    saveHabits(habits);
+    habitCloseForm();
+    renderHabits();
+    toast('Habit updated','check');
+    return;
+  }
+  // Create path — replace seeded habits if present
+  clearSeededHabits();
+  const freshHabits=getHabits();
+  clean.id='h_'+now+'_'+Math.random().toString(36).slice(2,7);
+  clean.createdAt=now;
+  clean.updatedAt=now;
+  clean.active=true;
+  freshHabits.push(clean);
+  saveHabits(freshHabits);
+  habitCloseForm();
+  renderHabits();
+  toast('Habit created','check');
 }
 function habitOpenLog(id){
   const h=getHabits().find(x=>x.id===id);if(!h)return;
   hLogHabitId=id;
   const date=hSelDate||todayStr(),log=getHabitLog(id,date);
   document.getElementById('habit-log-title').textContent=h.name;
-  document.getElementById('habit-log-body').innerHTML=`<div style="font-size:13px;color:var(--txt2);font-weight:400;line-height:1.65;margin-bottom:14px">${escapeHtml(h.question||('How many '+escapeHtml(h.unit||'')+' today?'))}</div><div class="habit-field"><div class="habit-row" style="gap:10px"><input class="fi" id="hl-val" type="number" min="0" step="any" value="${log?.value!=null?log.value:0}" style="text-align:center;font-size:20px;font-family:'Poppins',sans-serif;font-weight:900;padding:14px"/><div style="font-size:15px;font-weight:900;color:var(--txt2);min-width:60px">${escapeHtml(h.unit||'')}</div></div></div><div class="habit-field"><label class="habit-label">Notes (Optional)</label><textarea class="fi" id="hl-note" style="min-height:60px;resize:vertical;font-weight:400" placeholder="Anything to remember?">${escapeHtml(log?.note||'')}</textarea></div>`;
+  document.getElementById('habit-log-body').innerHTML=`<div style="font-size:13px;color:var(--txt2);font-weight:400;line-height:1.65;margin-bottom:14px">${escapeHtml(h.question||('How many '+escapeHtml(h.unit||'')+' today?'))}</div><div class="habit-field"><div class="habit-row" style="gap:10px"><input class="fi" id="hl-val" type="number" min="0" step="any" value="${log?.value!=null?log.value:0}" style="text-align:center;font-size:20px;font-family:'Inter',sans-serif;font-weight:700;padding:14px"/><div style="font-size:15px;font-weight:700;color:var(--txt2);min-width:60px">${escapeHtml(h.unit||'')}</div></div></div><div class="habit-field"><label class="habit-label">Notes (Optional)</label><textarea class="fi" id="hl-note" style="min-height:60px;resize:vertical;font-weight:400" placeholder="Anything to remember?">${escapeHtml(log?.note||'')}</textarea></div>`;
   document.getElementById('habit-log-foot').innerHTML=`<button class="btn bg-b bfl" onclick="habitSkipLog()">Skip</button><button class="btn bp bfl" onclick="habitSaveLog()">Save</button>`;
   document.getElementById('habit-log-ov').classList.add('open');
   setTimeout(()=>{const el=document.getElementById('hl-val');if(el){el.focus();el.select()}},80);
@@ -1541,8 +1974,120 @@ function habitSaveLog(){
   if(status==='completed')celebrateHabit(document.querySelector('.habit-modal-foot .bp'),h.color);
   habitCloseLog();renderHabits();
 }
+
+// ══════════════════════════════════════════════
+// BOOT SEQUENCE
+// ══════════════════════════════════════════════
+
 hydrateIcons();
 renderSkillsGrid('home-skills-grid');
+
+function injectIcons(){
+  const map = {
+    'streak-icon':      ['fire', 14],
+    'icon-bookmark':    ['bookmark', 16],
+    'icon-share':       ['share', 16],
+    'icon-more':        ['more', 16],
+    'icon-edit':        ['edit', 20],
+    'icon-pray':        ['pray', 20],
+    'icon-bible':       ['bible', 20],
+    'icon-books':       ['books', 20],
+    'icon-skill':       ['graduation-cap', 20],
+    'icon-trophy':      ['trophy', 20],
+    'icon-play':        ['play', 20],
+    'icon-arrow-right': ['arrow-right', 13],
+    'tab-home':         ['grid', 22],
+    'tab-personal':     ['dumbbell', 22],
+    'tab-spiritual':    ['bible', 22],
+    'tab-community':    ['users', 22],
+    'tab-more':         ['menu', 22]
+  };
+  Object.keys(map).forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.dataset.iconDone) {
+      el.innerHTML = ico(map[id][0], map[id][1]);
+      el.dataset.iconDone = '1';
+    }
+  });
+}
+injectIcons();
+
+(function initHeroBurst() {
+  const card = document.getElementById('hero-card');
+  if (!card) return;
+  const ambient = card.querySelector('.hero-ambient');
+  if (!ambient) return;
+
+  let holdTimer = null;
+  let holdStart = 0;
+  let activeParticles = 0;
+
+  function spawnBurst(count, heldMs) {
+    for (let i = 0; i < count; i++) {
+      if (activeParticles > 180) return;
+      const p = document.createElement('span');
+      p.className = 'burst-dust';
+      p.style.left = (4 + Math.random() * 92) + '%';
+      p.style.setProperty('--bx', (Math.random() * 80 - 40) + 'px');
+      p.style.animationDuration = (4.5 + Math.random() * 2) + 's';
+      const size = Math.min(11, 4 + heldMs / 500);
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      activeParticles++;
+      p.addEventListener('animationend', () => {
+        activeParticles--;
+        p.remove();
+      }, { once: true });
+      ambient.appendChild(p);
+    }
+  }
+
+  function startHold(e) {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    holdStart = Date.now();
+    spawnBurst(5, 0);
+    if (navigator.vibrate) navigator.vibrate(10);
+    clearInterval(holdTimer);
+    holdTimer = setInterval(() => {
+      const held = Date.now() - holdStart;
+      let count = 1;
+      if (held > 3000) count = 4;
+      else if (held > 1500) count = 3;
+      else if (held > 600) count = 2;
+      spawnBurst(count, held);
+    }, 200);
+  }
+
+  function endHold() {
+    clearInterval(holdTimer);
+    holdTimer = null;
+  }
+
+  card.addEventListener('pointerdown', startHold);
+  card.addEventListener('pointerup', endHold);
+  card.addEventListener('pointercancel', endHold);
+  card.addEventListener('pointerleave', endHold);
+})();
+
+(function initDuoCardReact() {
+  const cards = document.querySelectorAll('.duo-card');
+  if (cards.length < 2) return;
+
+  function applyShift(tappedCard) {
+    cards.forEach(c => {
+      if (c === tappedCard) c.style.transform = 'translateY(-3px)';
+      else c.style.transform = 'translateY(3px)';
+    });
+  }
+
+  cards.forEach(card => {
+    card.addEventListener('pointerdown', () => applyShift(card));
+  });
+})();
+
+startGreetingRotation();
+startHabitRotation();
+
 // ── Service Worker Registration ──
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
