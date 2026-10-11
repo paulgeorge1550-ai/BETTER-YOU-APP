@@ -6,30 +6,77 @@
 (async function boot() {
   document.body.classList.add('booting');
 
-  await cloudInitSession(async (isLoggedIn) => {
+  // ── Step 1: cached session? Render instantly, no wait ──
+  const cached = gs('bn_session', null);
+  if (cached && cached.email) {
+    _hydrateUser(cached);
+    document.body.classList.remove('booting');
+    nav('dashboard');
+  }
+
+  // ── Step 2: verify with Supabase in the background ──
+  await cloudInitSession((isLoggedIn) => {
     if (isLoggedIn && _cloudUser) {
       const u = {
-        name: (_cloudProfile && _cloudProfile.name) || 
-              (_cloudUser.user_metadata && _cloudUser.user_metadata.name) || 
+        name: (_cloudProfile && _cloudProfile.name) ||
+              (_cloudUser.user_metadata && _cloudUser.user_metadata.name) ||
               _cloudUser.email.split('@')[0],
         email: _cloudUser.email,
         gender: (_cloudProfile && _cloudProfile.gender) || 'male',
         isAdmin: !!(_cloudProfile && _cloudProfile.is_admin)
       };
-      user = u;
-      exProg = gs('bn_exprog_' + u.email, {});
-      difficulty = gs('bn_diff_' + u.email, 'beginner');
-      workoutOverrides = gs('bn_workout_overrides_' + u.email, {});
-      customPlan = gs('bn_custom_plan_' + u.email, {days:{}});
-      customExercises = gs('bn_custom_exercises_' + u.email, {});
-      if (!gs('bn_week_' + u.email, '')) ss('bn_week_' + u.email, getWeekKey());
-      checkWeekReset();
-      updateNavUser();
-      document.body.classList.remove('booting');
-      nav('dashboard');
+      ss('bn_session', u);
+      _hydrateUser(u);
+      if (document.body.classList.contains('booting')) {
+        document.body.classList.remove('booting');
+        nav('dashboard');
+      }
     } else {
-      document.body.classList.remove('booting');
-      nav('home');
+      // Only bounce to home if we had NO cached session either
+      if (!cached) {
+        document.body.classList.remove('booting');
+        nav('home');
+      }
+      // If we DID have a cached session, keep the user in.
+      // Network blips must never log people out.
+    }
+  });
+
+  // ── Step 3: back button guard ──
+  const rootPage = (user) ? 'dashboard' : 'home';
+  history.replaceState({ page: rootPage }, '', '#' + rootPage);
+
+  const _origNav = window.nav;
+  window.nav = function(pg){
+    const cur = history.state && history.state.page;
+    _origNav(pg);
+    if (cur !== pg) {
+      history.pushState({ page: pg }, '', '#' + pg);
+    }
+  };
+
+  window.addEventListener('popstate', (e) => {
+    const s = e.state;
+    if (s && s.page) {
+      window.nav(s.page);
+    } else {
+      // User is at the very edge — keep them inside
+      history.pushState({ page: rootPage }, '', '#' + rootPage);
+      toast('Press back again to exit', 'info');
+      window.nav(rootPage);
     }
   });
 })();
+
+// Hydrate user + all per-user state (reused by boot + loginUser)
+function _hydrateUser(u){
+  user = u;
+  exProg = gs('bn_exprog_' + u.email, {});
+  difficulty = gs('bn_diff_' + u.email, 'beginner');
+  workoutOverrides = gs('bn_workout_overrides_' + u.email, {});
+  customPlan = gs('bn_custom_plan_' + u.email, {days:{}});
+  customExercises = gs('bn_custom_exercises_' + u.email, {});
+  if (!gs('bn_week_' + u.email, '')) ss('bn_week_' + u.email, getWeekKey());
+  if (typeof checkWeekReset === 'function') checkWeekReset();
+  updateNavUser();
+}

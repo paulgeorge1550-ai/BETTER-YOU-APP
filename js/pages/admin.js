@@ -15,24 +15,87 @@ async function renderAdmin(){
   document.querySelectorAll('#panel-adash .cnt').forEach(el=>animC(el,parseInt(el.getAttribute('data-count'))));
 }
 
+let ytFilterSearch = '';
+
 function renderYTManager(){
-  const cont=document.getElementById('yt-manager-list');if(!cont)return;
-  const allEx=[];
+  const cont = document.getElementById('yt-manager-list');
+  if(!cont) return;
+  renderYTList();
+}
+
+function renderYTList(){
+  const cont = document.getElementById('yt-manager-list');
+  if(!cont) return;
+
+  const all = [];
   ['beginner','intermediate','professional'].forEach(tier=>{
-    Object.values(WORKOUTS[tier]).forEach(day=>{if(day.exs)day.exs.forEach(ex=>allEx.push({...ex,tierLabel:tier,dayLabel:day.label}))});
+    Object.keys(WORKOUTS[tier]).forEach(dayNum=>{
+      const day = WORKOUTS[tier][dayNum];
+      if(!day || !day.exs) return;
+      day.exs.forEach(ex=>{
+        all.push({
+          id: ex.id, name: ex.name, reps: ex.reps,
+          tierLabel: tier, dayNum: parseInt(dayNum,10), dayLabel: day.label
+        });
+      });
+    });
   });
-  const filtered=allEx.filter(ex=>ytFilterTier==='all'||ex.tierLabel===ytFilterTier);
-  cont.innerHTML=filtered.map(ex=>{
-    const saved=ytLinks[ex.id]||'';
-    return `<div class="yt-ex-card" id="ytc-${ex.id}"><div class="yt-ex-name">${escapeHtml(ex.name)}</div><div class="yt-ex-meta">${ex.tierLabel} · ${ex.dayLabel} · ${ex.reps}</div><div class="yt-input-row"><input class="yt-input" id="yt-${ex.id}" placeholder="YouTube embed ID" value="${saved}"/><button class="yt-save-btn" onclick="saveYT('${ex.id}')">Save</button><button class="btn bg-b bsm" onclick="previewYT('${ex.id}')">Preview</button></div><div class="yt-preview" id="ytprev-${ex.id}"><iframe src="" allowfullscreen loading="lazy"></iframe></div></div>`;
-  }).join('');
+
+  let list = all;
+  if(ytFilterTier !== 'all') list = list.filter(e => e.tierLabel === ytFilterTier);
+  if(ytFilterSearch) list = list.filter(e => e.name.toLowerCase().indexOf(ytFilterSearch) !== -1);
+
+  if(!list.length){
+    cont.innerHTML = '<div style="padding:30px;text-align:center;color:var(--txt2);font-size:13px">No matching exercises.</div>';
+    return;
+  }
+
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const byDay = {};
+  list.forEach(e => { (byDay[e.dayNum] = byDay[e.dayNum] || []).push(e); });
+
+  const tiers = ['beginner','intermediate','professional'];
+  let html = '';
+  Object.keys(byDay).sort((a,b)=>a-b).forEach(dayNum=>{
+    html += '<div class="yt-day-group">';
+    html += '<div class="yt-day-hdr">' + dayNames[dayNum] + '</div>';
+    tiers.forEach(tier=>{
+      const items = byDay[dayNum].filter(e => e.tierLabel === tier);
+      if(!items.length) return;
+      html += '<div class="yt-tier-hdr">' + tier.charAt(0).toUpperCase() + tier.slice(1) + '</div>';
+      html += items.map(ex => _ytExCardHTML(ex)).join('');
+    });
+    html += '</div>';
+  });
+
+  cont.innerHTML = html;
+}
+
+function _ytExCardHTML(ex){
+  const saved = ytLinks[ex.id] || '';
+  return `<div class="yt-ex-card" id="ytc-${ex.id}">
+    <div class="yt-ex-name">${escapeHtml(ex.name)}</div>
+    <div class="yt-ex-meta">${ex.dayLabel} · ${ex.reps}</div>
+    <div class="yt-input-row">
+      <input class="yt-input" id="yt-${ex.id}" placeholder="Paste YouTube link or ID" value="${escapeHtml(saved)}"/>
+      <button class="yt-save-btn" onclick="saveYT('${ex.id}')">Save</button>
+      <button class="btn bg-b bsm" onclick="previewYT('${ex.id}')">Preview</button>
+    </div>
+    <div class="yt-preview" id="ytprev-${ex.id}"><iframe src="" allowfullscreen loading="lazy"></iframe></div>
+    <a class="yt-search-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise tutorial')}" target="_blank" rel="noopener">${ico('search',11)} Search on YouTube</a>
+  </div>`;
 }
 
 function saveYT(exId){const inp=document.getElementById('yt-'+exId);if(!inp)return;let id=inp.value.trim();const m=id.match(/(?:v=|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);if(m)id=m[1];ytLinks[exId]=id;ss('bn_yt_links',ytLinks);toast('YouTube link saved','play')}
 
 function previewYT(exId){const inp=document.getElementById('yt-'+exId);if(!inp)return;let id=inp.value.trim();const m=id.match(/(?:v=|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);if(m)id=m[1];const prev=document.getElementById('ytprev-'+exId);if(!prev)return;if(!id){toast('Enter a YouTube ID first','warning');return}prev.style.display='block';prev.querySelector('iframe').src='https://www.youtube.com/embed/'+id+'?rel=0'}
 
-function filterYTTier(tier,btn){ytFilterTier=tier;document.querySelectorAll('.tier-filter .tf-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderYTManager()}
+function filterYTTier(tier, btn){
+  ytFilterTier = tier;
+  document.querySelectorAll('.tier-filter .tf-btn').forEach(b=>b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  renderYTList();
+}
 
 function renderAdminPublicList(){
   const cont=document.getElementById('admin-public-list');if(!cont)return;
@@ -77,4 +140,18 @@ function aPanel(id,e){
   const p=document.getElementById('panel-'+id);if(p)p.classList.add('on');
   if(e?.currentTarget)e.currentTarget.classList.add('on');
   if(id==='apublic')renderAdminPublicList();
+}
+
+// Admin can set a YT link from the normal workout page (only if one isn't set)
+function adminSaveYT(exId){
+  const inp = document.getElementById('adminyt-' + exId);
+  if(!inp) return;
+  let id = (inp.value || '').trim();
+  const m = id.match(/(?:v=|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if(m) id = m[1];
+  if(!id || id.length < 6){ toast('Paste a YouTube link or 11-char ID', 'warning'); return; }
+  ytLinks[exId] = id;
+  ss('bn_yt_links', ytLinks);
+  toast('Video saved — visible to everyone', 'play');
+  renderExCards();
 }

@@ -172,6 +172,34 @@ function renderSessionCard(){
   if(titleEl){
     titleEl.textContent = w.isRest ? w.tag : (w.tag + ' Session');
   }
+
+  // ── Video thumbnail: first exercise of today's workout ──
+  const imgEl     = document.getElementById('session-video-img');
+  const videoWrap = document.getElementById('session-video');
+  if(!imgEl || !videoWrap) return;
+
+  const clearThumb = () => {
+    imgEl.style.display = 'none';
+    imgEl.removeAttribute('src');
+    videoWrap.classList.remove('has-video');
+  };
+
+  if(w.isRest){ clearThumb(); return; }
+
+  const day = new Date().getDay();
+  const exs = (typeof getDayExercises === 'function') ? getDayExercises(difficulty, day) : [];
+  const firstEx = exs[0];
+  const ytId = firstEx ? (firstEx.ytId || (ytLinks && ytLinks[firstEx.id]) || '') : '';
+
+  if(!ytId){ clearThumb(); return; }
+
+  imgEl.onerror = () => {
+    imgEl.onerror = null;
+    imgEl.src = 'https://img.youtube.com/vi/' + ytId + '/hqdefault.jpg';
+  };
+  imgEl.src = 'https://img.youtube.com/vi/' + ytId + '/maxresdefault.jpg';
+  imgEl.style.display = 'block';
+  videoWrap.classList.add('has-video');
 }
 
 function openPersTab(tab){

@@ -50,3 +50,59 @@
 .tf-btn{background:var(--bg3);border:1.5px solid var(--brd);border-radius:10px;padding:8px 16px;font-size:12px;font-weight:700;color:var(--txt2);display:inline-flex;align-items:center;gap:6px}
 
 .tf-btn.on{background:rgba(217,174,74,.12);border-color:var(--acc);color:var(--acc)}
+
+/* ── YouTube Manager: search + day groups ── */
+.yt-search-row{ margin-bottom:14px; }
+.yt-search-input{
+  width:100%;
+  background:var(--bg3);
+  border:1.5px solid var(--brd);
+  border-radius:11px;
+  padding:11px 15px;
+  color:var(--txt);
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  font-weight:500;
+  outline:none;
+  transition:border-color .2s;
+}
+.yt-search-input:focus{ border-color:var(--acc); }
+.yt-search-input::placeholder{ color:var(--txt3); font-weight:400; }
+
+.yt-day-group{
+  margin-bottom:26px;
+}
+.yt-day-hdr{
+  font-family:'Cinzel',serif;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.20em;
+  text-transform:uppercase;
+  color:var(--gold);
+  padding:10px 2px 12px;
+  border-bottom:1px solid rgba(217,174,74,.20);
+  margin-bottom:14px;
+  text-shadow:0 0 12px rgba(217,174,74,.25);
+}
+.yt-tier-hdr{
+  font-family:'Inter',sans-serif;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--txt3);
+  margin:14px 0 8px;
+}
+.yt-search-link{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin-top:8px;
+  font-family:'Inter',sans-serif;
+  font-size:11px;
+  font-weight:600;
+  color:var(--acc);
+  text-decoration:none;
+  opacity:.85;
+}
+.yt-search-link:hover{ opacity:1; }

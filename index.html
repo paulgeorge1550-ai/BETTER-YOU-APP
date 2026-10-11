@@ -435,10 +435,11 @@
     </div>
 
     <!-- Today's Session -->
-    <div class="session-card" onclick="openPersTab('workout')">
-      <div class="session-video">
-        <div class="session-play"><span id="icon-play"></span></div>
-      </div>
+   <div class="session-card" onclick="startTodayWorkout()"></div>
+     <div class="session-video" id="session-video">
+  <img class="session-video-img" id="session-video-img" alt="" loading="lazy" style="display:none"/>
+  <div class="session-play"><span id="icon-play"></span></div>
+</div>
       <div class="session-body">
         <div class="session-meta" id="session-meta">PUSH · 6 EXERCISES · 25 MIN</div>
         <h3 class="session-title" id="session-title">Today's Session</h3>
@@ -663,6 +664,10 @@
       </div>
       <div class="ap" id="panel-ayt">
         <div class="apt">YouTube Manager</div>
+        <div class="yt-search-row">
+  <input class="yt-search-input" id="yt-search-input" placeholder="Search exercises..." oninput="ytFilterSearch=this.value.toLowerCase(); renderYTList();"/>
+</div>
+    
         <div class="tier-filter">
           <button class="tf-btn on" onclick="filterYTTier('all',this)">All Tiers</button>
           <button class="tf-btn" onclick="filterYTTier('beginner',this)">Beginner</button>
@@ -692,6 +697,7 @@
     <button class="tcl" onclick="closeTimer()"><span data-icon="x" data-size="16"></span></button>
     <div class="tt" id="tt">Rest Between Sets</div>
     <div class="ts2" id="ts2">1 minute before your next set</div>
+    <div class="t-payload" id="t-payload"></div>
     <div class="t-ring">
       <svg class="t-svg" width="152" height="152" viewBox="0 0 152 152">
         <circle class="t-bg" cx="76" cy="76" r="64"/>
@@ -784,6 +790,24 @@
   </button>
 </nav>
 
+<!-- 5-4-3-2-1-GO army intro -->
+<div class="army-ov" id="army-ov">
+  <div class="army-num" id="army-num"></div>
+</div>
+
+<!-- Hold counter for time-based exercises (plank, wallsit, etc.) -->
+<div class="hold-ov" id="hold-ov">
+  <div class="hold-box">
+    <div class="hold-lbl">HOLD</div>
+    <div class="hold-title" id="hold-title">Plank</div>
+    <div class="hold-num" id="hold-num">20s</div>
+    <div class="hold-acts">
+      <button class="hold-btn" onclick="holdAddFive()">+5s</button>
+      <button class="hold-btn primary" onclick="holdSkip()">Done</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-el" id="toast-el"><span id="t-ico"></span><span id="t-msg"></span></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -799,6 +823,7 @@
 <script src="js/shared/icons.js"></script>
 <script src="js/shared/utilities.js"></script>
 <script src="js/shared/ui.js"></script>
+<script src="js/shared/sounds.js"></script>
 <script src="js/shared/navigation.js"></script>
 <script src="js/shared/auth.js"></script>
 <script src="js/pages/skills.js"></script>

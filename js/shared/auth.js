@@ -50,16 +50,10 @@ async function doLogin(){
 }
 
 function loginUser(u){
-  user=u;ss('bn_session',u);
-  exProg=gs('bn_exprog_'+u.email,{});
-  difficulty=gs('bn_diff_'+u.email,'beginner');
-  workoutOverrides=gs('bn_workout_overrides_'+u.email,{});
-  customPlan=gs('bn_custom_plan_'+u.email,{days:{}});
-  customExercises=gs('bn_custom_exercises_'+u.email,{});
-  if(!gs('bn_week_'+u.email,''))ss('bn_week_'+u.email,getWeekKey());
-  checkWeekReset();
-  cpEditMode=false;
-  updateNavUser();nav('dashboard');
+  ss('bn_session', u);
+  _hydrateUser(u);
+  cpEditMode = false;
+  nav('dashboard');
 }
 
 async function signOut(){

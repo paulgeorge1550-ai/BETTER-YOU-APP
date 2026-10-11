@@ -73,7 +73,31 @@ function getDayExercises(diff,dayNum){
   }
   const day=WORKOUTS[diff]?.[dayNum];
   if(!day||!day.exs)return [];
-  return day.exs.map(applyOverride);
+  return day.exs.map(ex=>{
+    if(workoutOverrides[ex.id]) return applyOverride(ex); // user chose numbers → keep
+    return _softenExercise(applyOverride(ex), diff);
+  });
+}
+
+function _softenExercise(ex, diff){
+  if(!ex || ex.noTimer) return ex;
+  const repsStr = ex.reps || '';
+  const isTime = /sec/i.test(repsStr);
+  const suffixMatch = repsStr.match(/(per side|per leg|per arm)/i);
+  const suffix = suffixMatch ? ' ' + suffixMatch[1] : '';
+
+  let sets, val;
+  if (diff === 'beginner')       { sets = 1; val = isTime ? 20 : 5;  }
+  else if (diff === 'intermediate'){ sets = 2; val = isTime ? 20 : 5;  }
+  else if (diff === 'professional'){ sets = 3; val = isTime ? 30 : 10; }
+  else return ex;
+
+  return {
+    ...ex,
+    sets: sets,
+    reps: sets + ' × ' + val + (isTime ? ' sec' : '') + suffix,
+    _softened: true
+  };
 }
 
 function saveWorkoutOverrides(){if(!user)return;ss('bn_workout_overrides_'+user.email,workoutOverrides)}
@@ -152,7 +176,22 @@ function renderExerciseCardHTML(ex,idx,exs,locked,isCustomPlan){
   const pct=ex.sets>0?Math.round((s.sets.length/ex.sets)*100):0;
   const setsHtml=ex.sets>0?Array.from({length:ex.sets},(_,i)=>`<button class="sbt${s.sets.includes(i)?' done':''}" onclick="tickSet('${storeKey}',${i},${idx})">${s.sets.includes(i)?ico('check',14):i+1}</button>`).join(''):'';
   const ytId=ex.ytId||ytLinks[ex.id]||'';
-  const videoHtml=ytId?`<div class="ex-video-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0" allowfullscreen loading="lazy"></iframe></div>`:`<div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:12px;text-align:center"><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name+' exercise tutorial')}" target="_blank" style="color:var(--acc);font-size:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:5px">${ico('search',13)} Search "${escapeHtml(ex.name)}" on YouTube</a></div>`;
+ const isAdmin = !!(user && user.isAdmin);
+let videoHtml;
+if(ytId){
+  videoHtml = `<div class="ex-video-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0" allowfullscreen loading="lazy"></iframe></div>`;
+} else if(isAdmin){
+  videoHtml = `<div class="admin-embed-box">
+    <div class="admin-embed-lbl">${ico('play',13)} No video yet — paste a YouTube link</div>
+    <div class="admin-embed-row">
+      <input class="admin-embed-input" id="adminyt-${ex.id}" placeholder="https://youtu.be/..."/>
+      <button class="admin-embed-save" onclick="event.stopPropagation();adminSaveYT('${ex.id}')">Save</button>
+    </div>
+    <a class="admin-embed-search" href="https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name+' exercise tutorial')}" target="_blank" rel="noopener">${ico('search',11)} Search on YouTube</a>
+  </div>`;
+} else {
+  videoHtml = `<div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:12px;text-align:center"><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name+' exercise tutorial')}" target="_blank" style="color:var(--acc);font-size:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:5px">${ico('search',13)} Search "${escapeHtml(ex.name)}" on YouTube</a></div>`;
+}
   const canEdit=ex._editable&&!locked&&!isDone&&(!isCustomPlan||cpEditMode);
   const editBtn=canEdit?`<button class="ex-edit-btn" onclick="event.stopPropagation();toggleExEdit('${ex.id}')" title="Edit sets & reps">${ico('edit',13)}</button>`:'';
   const editPanel=canEdit?renderExEditPanel(ex):'';
@@ -225,8 +264,16 @@ function renderCustomExCards(cont){
 }
 
 function startSession(){
-  activeExIdx=0;renderExCards();
-  setTimeout(()=>{const exs=getDayExercises(difficulty,selDay);const el=document.getElementById('exc-'+exs[0]?.id);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'})},100);
+  activeExIdx = 0;
+  renderExCards();
+  // 5-4-3-2-1-GO army intro before first set
+  startArmyIntro(()=>{
+    setTimeout(()=>{
+      const exs = getDayExercises(difficulty, selDay);
+      const el  = document.getElementById('exc-' + (exs[0] && exs[0].id));
+      if(el) el.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 100);
+  });
 }
 
 function completeAllSets(storeKey,exArrIdx){
@@ -287,12 +334,164 @@ function resetWorkout(){
   toast('Workout reset for the week','refresh');
 }
 
-function openTimer(sec,title,sub,onEnd){
-  clearInterval(tInt);tTotal=sec;tSec=sec;timerOnEnd=onEnd||null;
-  document.getElementById('tt').innerHTML=ico('clock',16)+' '+title;
-  document.getElementById('ts2').textContent=sub||'1 minute rest between sets';
-  updTimer();document.getElementById('timer-ov').classList.add('open');
-  tInt=setInterval(()=>{tSec--;if(tSec<=0){clearInterval(tInt);closeTimerAndRun()}else updTimer()},1000);
+let _holdSec = 0;
+let _holdInt = null;
+let _holdOnDone = null;
+
+function openTimer(sec, title, sub, onEnd, opts){
+  opts = opts || {};
+  clearInterval(tInt);
+  tTotal = sec;
+  tSec = sec;
+  timerOnEnd = onEnd || null;
+  document.getElementById('tt').innerHTML = ico('clock',16) + ' ' + title;
+  document.getElementById('ts2').textContent = sub || '';
+  const payload = document.getElementById('t-payload');
+  if(payload){
+    if(opts.payloadHtml){ payload.innerHTML = opts.payloadHtml; payload.style.display='block'; }
+    else { payload.innerHTML = ''; payload.style.display='none'; }
+  }
+  updTimer();
+  document.getElementById('timer-ov').classList.add('open');
+
+  const gender = (typeof user !== 'undefined' && user && user.gender) || 'male';
+  const NUM = {5:'Five', 4:'Four', 3:'Three', 2:'Two', 1:'One'};
+
+  tInt = setInterval(()=>{
+    tSec--;
+    if(tSec > 0 && tSec <= 5){
+      // Voice fires on the SAME tick that displays the number. Perfect sync.
+      beepTick();
+      speakNumber(NUM[tSec], gender, { rate:0.95, pitch:0.60 });
+    }
+    if(tSec <= 0){
+      clearInterval(tInt);
+      beepDone();
+      speakNumber('Go', gender, { rate:1.35, pitch:0.55 });
+      setTimeout(closeTimerAndRun, 700);
+      return;
+    }
+    updTimer();
+  }, 1000);
+}
+
+function isTimeBased(ex){
+  if(!ex) return false;
+  if(ex._mode === 'time') return true;
+  const s = (ex.reps || '').toLowerCase();
+  return s.indexOf('sec') !== -1 || s.indexOf('min') !== -1;
+}
+function secsFromReps(ex){
+  const s = (ex.reps || '').toLowerCase();
+  const ms = s.match(/(\d+)\s*sec/);
+  if(ms) return parseInt(ms[1], 10) || 20;
+  const mm = s.match(/(\d+)\s*min/);
+  if(mm) return (parseInt(mm[1], 10) || 1) * 60;
+  return 20;
+}
+
+function _formTipsHtml(focus){
+  if(!focus) return '';
+  // Split on '.', ';' or ' • ' — keep 3 clean lines
+  let parts = focus.split(/[.;•]\s*/).map(x=>x.trim()).filter(Boolean);
+  if(parts.length < 3){
+    // Try splitting on commas as a fallback
+    parts = focus.split(/[,;.]\s*/).map(x=>x.trim()).filter(Boolean);
+  }
+  parts = parts.slice(0, 3);
+  if(!parts.length) return '';
+  return '<div class="t-payload-hdr">FORM FOCUS</div>' +
+    '<ul class="t-payload-list">' + parts.map(p=>'<li>'+escapeHtml(p)+'</li>').join('') + '</ul>';
+}
+
+function _nextUpHtml(nextEx){
+  if(!nextEx) return '';
+  return '<div class="t-payload-hdr">NEXT UP</div>' +
+    '<div class="t-payload-next">'+escapeHtml(nextEx.name)+'</div>' +
+    '<div class="t-payload-next-meta">'+escapeHtml(nextEx.reps||'')+'</div>';
+}
+
+function tickSet(storeKey,setIdx,exArrIdx){
+  const s = exProg[storeKey] || {sets:[],done:false};
+  // Untoggle — allow un-doing a set
+  if(s.sets.includes(setIdx)){
+    s.sets = s.sets.filter(i=>i!==setIdx);
+    exProg[storeKey] = {...s};
+    if(user) ss('bn_exprog_'+user.email, exProg);
+    renderExCards();
+    return;
+  }
+  const exs = getDayExercises(difficulty, selDay);
+  const ex  = exs[exArrIdx]; if(!ex) return;
+
+  // Time-based exercise: open a hold counter instead of straight-marking done
+  if(isTimeBased(ex) && !ex.noTimer){
+    openHoldCounter(ex, secsFromReps(ex), ()=>{
+      _applySetTick(storeKey, setIdx, exArrIdx);
+    });
+    return;
+  }
+  _applySetTick(storeKey, setIdx, exArrIdx);
+}
+
+function _applySetTick(storeKey, setIdx, exArrIdx){
+  const s = exProg[storeKey] || {sets:[],done:false};
+  s.sets = Array.from(new Set([...s.sets, setIdx]));
+  exProg[storeKey] = {...s};
+  if(user) ss('bn_exprog_'+user.email, exProg);
+  const exs = getDayExercises(difficulty, selDay);
+  const ex  = exs[exArrIdx]; if(!ex) return;
+  const totalSets  = ex.sets;
+  const isLastSet  = s.sets.length >= totalSets;
+  const isLastEx   = exArrIdx === exs.length - 1;
+  const nextEx     = exs[exArrIdx + 1] || null;
+  renderExCards();
+
+  if(isLastSet){
+    if(ex.noTimer){ markExDone(storeKey, exArrIdx); return; }
+    if(isLastEx){
+      // Last exercise — no rest, straight to congratulations
+      markExDone(storeKey, exArrIdx);
+      setTimeout(()=>{ openCong(); }, 500);
+      return;
+    }
+    // Rest between exercises: show NEXT UP preview
+    openTimer(60, "Rest", "Take a breath — next exercise coming up",
+      ()=>{ markExDone(storeKey, exArrIdx); },
+      { payloadHtml: _nextUpHtml(nextEx) }
+    );
+    return;
+  }
+  if(ex.noTimer) return;
+  // Rest between sets: show form tips
+  openTimer(30, "Rest Between Sets",
+    "Next: set " + (s.sets.length + 1) + " of " + totalSets,
+    null,
+    { payloadHtml: _formTipsHtml(ex.focus) }
+  );
+}
+
+function completeAllSets(storeKey,exArrIdx){
+  const s = exProg[storeKey] || {sets:[],done:false};
+  const exs = getDayExercises(difficulty, selDay);
+  const ex = exs[exArrIdx]; if(!ex) return;
+  if(s.sets.length >= ex.sets) return;
+  s.sets = Array.from({length:ex.sets},(_,i)=>i);
+  exProg[storeKey] = {...s};
+  if(user) ss('bn_exprog_'+user.email, exProg);
+  renderExCards();
+  const isLastEx = exArrIdx === exs.length - 1;
+  const nextEx   = exs[exArrIdx + 1] || null;
+  if(ex.noTimer){ markExDone(storeKey,exArrIdx); return; }
+  if(isLastEx){
+    markExDone(storeKey, exArrIdx);
+    setTimeout(()=>{ openCong(); }, 500);
+    return;
+  }
+  openTimer(60, "Rest", "Take a breath — next exercise coming up",
+    ()=>{ markExDone(storeKey, exArrIdx); },
+    { payloadHtml: _nextUpHtml(nextEx) }
+  );
 }
 
 function updTimer(){
@@ -338,3 +537,61 @@ function openCong(){
 }
 
 function closeCong(){document.getElementById('cong-ov').classList.remove('open');renderExCards()}
+
+// ─────────────────────────────────────────────
+// HOLD COUNTER — for time-based exercises
+// ─────────────────────────────────────────────
+function openHoldCounter(ex, startSec, onDone){
+  _holdSec = startSec || 20;
+  _holdOnDone = onDone || null;
+  const ov = document.getElementById('hold-ov');
+  if(!ov){ if(onDone) onDone(); return; }
+  document.getElementById('hold-title').textContent = ex.name || 'Hold';
+  _updateHoldDisplay();
+  ov.classList.add('open');
+
+  const gender = (typeof user !== 'undefined' && user && user.gender) || 'male';
+  const NUM = {5:'Five', 4:'Four', 3:'Three', 2:'Two', 1:'One'};
+  speakNumber('Begin ' + _holdSec + ' second hold', gender, {rate:0.95, pitch:0.60});
+
+  clearInterval(_holdInt);
+  // Wait 1.5s after "Begin" finishes before starting tick-down
+  setTimeout(()=>{
+    _holdInt = setInterval(()=>{
+      _holdSec--;
+      if(_holdSec > 0 && _holdSec <= 5){
+        beepTick();
+        speakNumber(NUM[_holdSec], gender, { rate:0.95, pitch:0.60 });
+      }
+      if(_holdSec <= 0){
+        clearInterval(_holdInt); _holdInt = null;
+        beepDone();
+        speakNumber('Done', gender, { rate:1.15, pitch:0.65 });
+        setTimeout(()=>{
+          ov.classList.remove('open');
+          if(_holdOnDone){ const fn = _holdOnDone; _holdOnDone = null; fn(); }
+        }, 900);
+        return;
+      }
+      _updateHoldDisplay();
+    }, 1000);
+  }, 1500);
+}
+
+function _updateHoldDisplay(){
+  const el = document.getElementById('hold-num');
+  if(el) el.textContent = _holdSec + 's';
+}
+
+function holdAddFive(){
+  _holdSec += 5;
+  _updateHoldDisplay();
+  beepTick();
+}
+
+function holdSkip(){
+  clearInterval(_holdInt); _holdInt = null;
+  document.getElementById('hold-ov').classList.remove('open');
+  beepTick();
+  if(_holdOnDone){ const fn = _holdOnDone; _holdOnDone = null; fn(); }
+}
