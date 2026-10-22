@@ -91,6 +91,12 @@ function _mapKey(localKey) {
   if (localKey === 'bn_yt_links' || localKey === 'bn_public_exercises') {
     return { scope: 'global', key: localKey };
   }
+  
+  // ANY key starting with bn_yt_links should be global
+  if (localKey.startsWith('bn_yt_links')) {
+    return { scope: 'global', key: 'bn_yt_links' };
+  }
+
   // Handled by Supabase Auth — not stored as data
   if (localKey === 'bn_session' || localKey === 'bn_users') {
     return { scope: 'skip', key: localKey };

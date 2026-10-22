@@ -81,7 +81,7 @@ function _ytExCardHTML(ex){
       <button class="yt-save-btn" onclick="saveYT('${ex.id}')">Save</button>
       <button class="btn bg-b bsm" onclick="previewYT('${ex.id}')">Preview</button>
     </div>
-    <div class="yt-preview" id="ytprev-${ex.id}"><iframe src="" allowfullscreen loading="lazy"></iframe></div>
+    <div class="yt-preview" id="ytprev-${ex.id}"><iframe src="" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
     <a class="yt-search-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise tutorial')}" target="_blank" rel="noopener">${ico('search',11)} Search on YouTube</a>
   </div>`;
 }
