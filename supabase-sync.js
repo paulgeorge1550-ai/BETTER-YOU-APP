@@ -1,12 +1,6 @@
 // ══════════════════════════════════════════
 // BETTER YOU — Cloud Sync Layer
 // ══════════════════════════════════════════
-// This file:
-//   1. Creates the Supabase client
-//   2. Handles auth (signup/signin/signout)
-//   3. Loads all user data into memory
-//   4. Replaces gs() and ss() with cloud-aware versions
-// Loaded BEFORE app.js in index.html.
 
 const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -85,26 +79,22 @@ async function _pushGlobal(key, value) {
 }
 
 // ── KEY MAPPING ───────────────────────────
-// Local app keys → cloud key/scope
 function _mapKey(localKey) {
-  // Global (shared across all users)
   if (localKey === 'bn_yt_links' || localKey === 'bn_public_exercises') {
     return { scope: 'global', key: localKey };
   }
   
-  // ANY key starting with bn_yt_links should be global
   if (localKey.startsWith('bn_yt_links')) {
     return { scope: 'global', key: 'bn_yt_links' };
   }
 
-  // Handled by Supabase Auth — not stored as data
   if (localKey === 'bn_session' || localKey === 'bn_users') {
     return { scope: 'skip', key: localKey };
   }
-  // Strip email suffix: bn_habits_foo@x.com → bn_habits
+  
   const m = localKey.match(/^(bn_[a-z_]+?)_[^_]+@[^_]+$/i);
   if (m) return { scope: 'user', key: m[1] };
-  // Everything else user-scoped
+  
   return { scope: 'user', key: localKey };
 }
 
@@ -120,7 +110,6 @@ window.gs = function(localKey, fallback) {
     if (Object.prototype.hasOwnProperty.call(_cloudCache, cacheKey)) {
       return _cloudCache[cacheKey];
     }
-    // Fallback to localStorage (pre-migration data)
     const local = localStorage.getItem(localKey);
     return local ? JSON.parse(local) : fallback;
   } catch { return fallback; }
@@ -135,7 +124,8 @@ window.ss = function(localKey, value) {
     }
     const cacheKey = m.scope === 'global' ? '@g/' + m.key : m.key;
     _cloudCache[cacheKey] = value;
-        // Fire-and-forget push
+    
+    // Fire-and-forget push
     if (m.scope === 'global') {
       _pushGlobal(m.key, value).then(() => {
          console.log('Global save successful:', m.key);
@@ -144,8 +134,17 @@ window.ss = function(localKey, value) {
          alert('Database Error: ' + err.message);
       });
     }
-    else _pushUser(m.key, value).catch(()=>{});
+    else {
+      _pushUser(m.key, value).catch(()=>{});
+    }
     
+    // Local fallback for offline
+    try { localStorage.setItem(localKey, JSON.stringify(value)); } catch {}
+  } catch (err) { 
+    console.error(err); 
+  }
+};
+
 // ── ADMIN HELPERS ─────────────────────────
 async function cloudGetAllProfiles() {
   const { data, error } = await _sb.from('profiles').select('*').order('created_at');
@@ -157,12 +156,9 @@ async function cloudGetAllUserDataKey(key) {
   return error ? [] : (data || []);
 }
 
-
 // ══════════════════════════════════════════
-// SESSION INITIALIZATION (Phase 0)
+// SESSION INITIALIZATION
 // ══════════════════════════════════════════
-// Restores Supabase session BEFORE the UI renders.
-// Prevents the flash of login screen on every page load.
 
 async function cloudInitSession(onReady) {
   let finished = false;
