@@ -33,7 +33,7 @@ async function doLogin(){
   if(!e||!p)return showErr('le-err','Please complete all fields.');
   try {
     await cloudSignIn(e, p);
-    await cloudLoadAll();
+    await cloudLoadAll();  // <--- THIS IS CRITICAL
     const u = {
       name: (_cloudProfile && _cloudProfile.name) || 
             (_cloudUser && _cloudUser.user_metadata && _cloudUser.user_metadata.name) || 

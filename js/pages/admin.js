@@ -143,15 +143,27 @@ function aPanel(id,e){
 }
 
 // Admin can set a YT link from the normal workout page (only if one isn't set)
-function adminSaveYT(exId){
+async function adminSaveYT(exId){
   const inp = document.getElementById('adminyt-' + exId);
   if(!inp) return;
   let id = (inp.value || '').trim();
   const m = id.match(/(?:v=|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
   if(m) id = m[1];
   if(!id || id.length < 6){ toast('Paste a YouTube link or 11-char ID', 'warning'); return; }
+  
   ytLinks[exId] = id;
-  ss('bn_yt_links', ytLinks);
-  toast('Video saved — visible to everyone', 'play');
-  renderExCards();
+  
+  // Force wait for the network push
+  try {
+    await window._sb.from('global_data').upsert(
+      { key: 'bn_yt_links', value: ytLinks, updated_at: new Date().toISOString() },
+      { onConflict: 'key' }
+    );
+    ss('bn_yt_links', ytLinks); // Update local cache
+    toast('Video saved — visible to everyone', 'play');
+    renderExCards(); 
+  } catch (err) {
+    console.error("Save failed:", err);
+    toast('Network error — check console', 'warning');
+  }
 }
