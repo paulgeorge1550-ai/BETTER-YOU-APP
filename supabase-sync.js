@@ -135,14 +135,17 @@ window.ss = function(localKey, value) {
     }
     const cacheKey = m.scope === 'global' ? '@g/' + m.key : m.key;
     _cloudCache[cacheKey] = value;
-    // Fire-and-forget push
-    if (m.scope === 'global') _pushGlobal(m.key, value).catch(()=>{});
+        // Fire-and-forget push
+    if (m.scope === 'global') {
+      _pushGlobal(m.key, value).then(() => {
+         console.log('Global save successful:', m.key);
+      }).catch(err => {
+         console.error('Global save FAILED:', err);
+         alert('Database Error: ' + err.message);
+      });
+    }
     else _pushUser(m.key, value).catch(()=>{});
-    // Local fallback for offline
-    try { localStorage.setItem(localKey, JSON.stringify(value)); } catch {}
-  } catch {}
-};
-
+    
 // ── ADMIN HELPERS ─────────────────────────
 async function cloudGetAllProfiles() {
   const { data, error } = await _sb.from('profiles').select('*').order('created_at');
