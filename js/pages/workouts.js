@@ -266,14 +266,19 @@ function renderCustomExCards(cont){
 function startSession(){
   activeExIdx = 0;
   renderExCards();
+  
   // 5-4-3-2-1-GO army intro before first set
   startArmyIntro(()=>{
-    setTimeout(()=>{
-      const exs = getDayExercises(difficulty, selDay);
-      const el  = document.getElementById('exc-' + (exs[0] && exs[0].id));
-      if(el) el.scrollIntoView({behavior:'smooth', block:'nearest'});
-    }, 100);
+    startSessionAfterIntro();
   });
+}
+
+function startSessionAfterIntro(){
+  setTimeout(()=>{
+    const exs = getDayExercises(difficulty, selDay);
+    const el  = document.getElementById('exc-' + (exs[0] && exs[0].id));
+    if(el) el.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }, 100);
 }
 
 function completeAllSets(storeKey,exArrIdx){

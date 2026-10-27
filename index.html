@@ -435,16 +435,16 @@
     </div>
 
     <!-- Today's Session -->
-    <div class="session-card" onclick="startTodayWorkout()">
+    <div class="session-card">
       <div class="session-video" id="session-video">
         <img class="session-video-img" id="session-video-img" alt="" loading="lazy" style="display:none"/>
-        <div class="session-play"><span id="icon-play"></span></div>
+        <div class="session-play" onclick="startTodayWorkout()" style="cursor:pointer;"><span id="icon-play"></span></div>
       </div>
       <div class="session-body">
         <div class="session-meta" id="session-meta">PUSH · 6 EXERCISES · 25 MIN</div>
         <h3 class="session-title" id="session-title">Today's Session</h3>
         <div class="duo-btn-wrap">
-          <button class="duo-btn-outlined" onclick="event.stopPropagation();startTodayWorkout()">
+          <button class="duo-btn-outlined" onclick="startTodayWorkout()">
             Start Workout
             <span id="icon-arrow-right"></span>
           </button>
@@ -814,6 +814,7 @@
   <div class="army-pill">
     <div class="army-lbl">STARTING IN</div>
     <div class="army-num" id="army-num"></div>
+    <button class="army-skip" onclick="cancelArmyIntro()">Skip</button>
   </div>
 </div>
 

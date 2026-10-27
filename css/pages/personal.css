@@ -590,3 +590,22 @@
   opacity:.85;
 }
 .admin-embed-search:hover{ opacity:1; }
+/* Army Countdown Skip Button */
+.army-skip {
+  background: transparent;
+  border: 1px solid rgba(217, 174, 74, 0.4);
+  color: var(--gold-soft);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: all 0.2s;
+}
+.army-skip:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(217, 174, 74, 0.1);
+}

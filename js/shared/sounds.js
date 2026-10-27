@@ -54,10 +54,16 @@ function speak(text, gender='male', opts={}){
 }
 
 // Full-screen 5-4-3-2-1-GO intro
+let _armyTimeout = null;
 function startArmyIntro(onDone){
   const ov    = document.getElementById('army-ov');
   const numEl = document.getElementById('army-num');
   if(!ov || !numEl){ if(onDone) onDone(); return; }
+  
+  // Reset cancel state
+  window._armyCancelled = false;
+  clearTimeout(_armyTimeout);
+
   const gender = (typeof user !== 'undefined' && user && user.gender) || 'male';
   const seq = [
     { t:'5', say:'Five',  rate:0.95, pitch:0.60 },
@@ -70,9 +76,10 @@ function startArmyIntro(onDone){
   ov.classList.add('open');
   let i = 0;
   const step = () => {
+    if(window._armyCancelled) return;
     if(i >= seq.length){
       ov.classList.remove('open');
-      setTimeout(()=>{ if(onDone) onDone(); }, 350);
+      _armyTimeout = setTimeout(()=>{ if(onDone) onDone(); }, 350);
       return;
     }
     const s = seq[i];
@@ -81,9 +88,18 @@ function startArmyIntro(onDone){
     beepTick();
     speak(s.say, gender, { rate:s.rate, pitch:s.pitch });
     i++;
-    setTimeout(step, 900);
+    _armyTimeout = setTimeout(step, 900);
   };
   step();
+}
+
+function cancelArmyIntro(){
+  window._armyCancelled = true;
+  clearTimeout(_armyTimeout);
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  document.getElementById('army-ov').classList.remove('open');
+  // Trigger the workout start immediately when cancelled
+  if (typeof startSessionAfterIntro === 'function') startSessionAfterIntro();
 }
 
 // Fire the "5-4-3-2-1" voice only, no full-screen overlay (used inside rest timer)
