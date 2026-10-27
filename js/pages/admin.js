@@ -106,7 +106,32 @@ function _ytExCardHTML(ex){
   </div>`;
 }
 
-function saveYT(exId){const inp=document.getElementById('yt-'+exId);if(!inp)return;let id=inp.value.trim();const m=id.match(/(?:v=|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);if(m)id=m[1];ytLinks[exId]=id;ss('bn_yt_links',ytLinks);toast('YouTube link saved','play')}
+async function saveYT(exId){
+  const inp = document.getElementById('yt-' + exId);
+  if(!inp) return;
+  let id = inp.value.trim();
+  const m = id.match(/(?:v=|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if(m) id = m[1];
+  
+  ytLinks[exId] = id;
+  
+  if(window._sb) {
+    try {
+      const { error } = await window._sb.from('global_data').upsert(
+        { key: 'bn_yt_links', value: ytLinks, updated_at: new Date().toISOString() },
+        { onConflict: 'key' }
+      );
+      if (error) throw error;
+      toast('Video saved to cloud', 'check');
+    } catch (e) {
+      console.error("Save failed:", e);
+      toast('Network error saving video', 'warning');
+    }
+  }
+  
+  ss('bn_yt_links', ytLinks);
+  renderYTList(); 
+}
 
 function previewYT(exId){const inp=document.getElementById('yt-'+exId);if(!inp)return;let id=inp.value.trim();const m=id.match(/(?:v=|embed\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);if(m)id=m[1];const prev=document.getElementById('ytprev-'+exId);if(!prev)return;if(!id){toast('Enter a YouTube ID first','warning');return}prev.style.display='block';prev.querySelector('iframe').src='https://www.youtube.com/embed/'+id+'?rel=0'}
 
@@ -173,17 +198,20 @@ async function adminSaveYT(exId){
   
   ytLinks[exId] = id;
   
-  // Force wait for the network push
-  try {
-    await window._sb.from('global_data').upsert(
-      { key: 'bn_yt_links', value: ytLinks, updated_at: new Date().toISOString() },
-      { onConflict: 'key' }
-    );
-    ss('bn_yt_links', ytLinks); // Update local cache
-    toast('Video saved — visible to everyone', 'play');
-    renderExCards(); 
-  } catch (err) {
-    console.error("Save failed:", err);
-    toast('Network error — check console', 'warning');
+  if(window._sb) {
+    try {
+      const { error } = await window._sb.from('global_data').upsert(
+        { key: 'bn_yt_links', value: ytLinks, updated_at: new Date().toISOString() },
+        { onConflict: 'key' }
+      );
+      if (error) throw error;
+      toast('Video saved to cloud', 'check');
+    } catch (e) {
+      console.error("Save failed:", e);
+      toast('Network error saving video', 'warning');
+    }
   }
+  
+  ss('bn_yt_links', ytLinks);
+  renderExCards(); 
 }

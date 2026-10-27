@@ -31,13 +31,18 @@ async function doLogin(){
   hideErr('le-err');
   const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value;
   if(!e||!p)return showErr('le-err','Please complete all fields.');
+  
   try {
+    // 1. Authenticate with Supabase
     await cloudSignIn(e, p);
     
-    // FORCE SYNC: Clear old cache, fetch fresh global data
-    _cloudCache = {}; 
-    await cloudLoadAll(); 
+    // 2. Fetch all data (including global videos) before moving forward
+    await cloudLoadAll();
     
+    // 3. Small delay to guarantee global_data is fully cached in memory
+    await new Promise(r => setTimeout(r, 800));
+    
+    // 4. Build the user object
     const u = {
       name: (_cloudProfile && _cloudProfile.name) || 
             (_cloudUser && _cloudUser.user_metadata && _cloudUser.user_metadata.name) || 
@@ -46,8 +51,11 @@ async function doLogin(){
       gender: (_cloudProfile && _cloudProfile.gender) || 'male',
       isAdmin: !!(_cloudProfile && _cloudProfile.is_admin)
     };
+    
+    // 5. Log in and go to dashboard
     loginUser(u);
     toast('Welcome back, '+u.name,'check');
+    
   } catch (err) {
     showErr('le-err', err.message || 'Incorrect email or password.');
   }
