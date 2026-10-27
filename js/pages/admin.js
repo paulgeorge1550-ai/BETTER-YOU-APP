@@ -16,6 +16,7 @@ async function renderAdmin(){
 }
 
 let ytFilterSearch = '';
+let ytFilterDay = new Date().getDay(); // Default to today's day
 
 function renderYTManager(){
   const cont = document.getElementById('yt-manager-list');
@@ -27,6 +28,11 @@ function renderYTList(){
   const cont = document.getElementById('yt-manager-list');
   if(!cont) return;
 
+  // 1. Sync the dropdown to match the current day
+  const daySelect = document.getElementById('admin-day-select');
+  if(daySelect) daySelect.value = ytFilterDay;
+
+  // 2. Build the flat list of exercises
   const all = [];
   ['beginner','intermediate','professional'].forEach(tier=>{
     Object.keys(WORKOUTS[tier]).forEach(dayNum=>{
@@ -41,8 +47,10 @@ function renderYTList(){
     });
   });
 
+  // 3. Filter by Tier, Day, and Search
   let list = all;
   if(ytFilterTier !== 'all') list = list.filter(e => e.tierLabel === ytFilterTier);
+  if(ytFilterDay !== 'all') list = list.filter(e => e.dayNum === ytFilterDay);
   if(ytFilterSearch) list = list.filter(e => e.name.toLowerCase().indexOf(ytFilterSearch) !== -1);
 
   if(!list.length){
@@ -50,6 +58,7 @@ function renderYTList(){
     return;
   }
 
+  // 4. Group by day (so if "All Days" is selected, they still have headers)
   const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const byDay = {};
   list.forEach(e => { (byDay[e.dayNum] = byDay[e.dayNum] || []).push(e); });
@@ -69,6 +78,17 @@ function renderYTList(){
   });
 
   cont.innerHTML = html;
+  hydrateIcons(cont);
+}
+
+// Handle Next/Prev buttons
+function adminShiftDay(dir){
+  if(ytFilterDay === 'all') {
+    ytFilterDay = dir > 0 ? 0 : 6;
+  } else {
+    ytFilterDay = (ytFilterDay + dir + 7) % 7;
+  }
+  renderYTList();
 }
 
 function _ytExCardHTML(ex){

@@ -106,3 +106,58 @@
   opacity:.85;
 }
 .yt-search-link:hover{ opacity:1; }
+
+/* Admin Day Navigation */
+.admin-day-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  background: var(--bg3);
+  border: 1px solid var(--brd);
+  border-radius: 11px;
+  padding: 6px;
+}
+
+.admin-day-btn {
+  background: var(--card);
+  border: 1px solid var(--brd2);
+  color: var(--txt2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-day-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.admin-day-select {
+  flex: 1;
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.admin-day-select option {
+  background: var(--card);
+  color: var(--txt);
+  font-family: 'Inter', sans-serif;
+  text-transform: none;
+  letter-spacing: normal;
+}

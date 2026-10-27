@@ -663,9 +663,35 @@
         </div>
       </div>
       <div class="ap" id="panel-ayt">
-        <div class="apt">YouTube Manager</div>
-        <div class="yt-search-row">
-  <input class="yt-search-input" id="yt-search-input" placeholder="Search exercises..." oninput="ytFilterSearch=this.value.toLowerCase(); renderYTList();"/>
+  <div class="apt">YouTube Manager</div>
+  
+  <div class="yt-search-row">
+    <input class="yt-search-input" id="yt-search-input" placeholder="Search exercises..." oninput="ytFilterSearch=this.value.toLowerCase(); renderYTList();"/>
+  </div>
+
+  <!-- NEW: Day Selector Bar -->
+  <div class="admin-day-nav">
+    <button class="admin-day-btn" onclick="adminShiftDay(-1)">← Prev</button>
+    <select class="admin-day-select" id="admin-day-select" onchange="ytFilterDay = parseInt(this.value, 10); renderYTList();">
+      <option value="0">Sunday</option>
+      <option value="1">Monday</option>
+      <option value="2">Tuesday</option>
+      <option value="3">Wednesday</option>
+      <option value="4">Thursday</option>
+      <option value="5">Friday</option>
+      <option value="6">Saturday</option>
+      <option value="all">All Days</option>
+    </select>
+    <button class="admin-day-btn" onclick="adminShiftDay(1)">Next →</button>
+  </div>
+
+  <div class="tier-filter">
+    <button class="tf-btn on" onclick="filterYTTier('all',this)">All Tiers</button>
+    <button class="tf-btn" onclick="filterYTTier('beginner',this)">Beginner</button>
+    <button class="tf-btn" onclick="filterYTTier('intermediate',this)">Intermediate</button>
+    <button class="tf-btn" onclick="filterYTTier('professional',this)">Professional</button>
+  </div>
+  <div id="yt-manager-list"></div>
 </div>
     
         <div class="tier-filter">
