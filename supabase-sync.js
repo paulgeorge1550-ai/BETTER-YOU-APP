@@ -55,7 +55,19 @@ async function cloudLoadAll() {
   ]);
 
   if (ud.data) ud.data.forEach(r => { _cloudCache[r.key] = r.value; });
-  if (gd.data) gd.data.forEach(r => { _cloudCache['@g/' + r.key] = r.value; });
+  
+  // Force global data (like bn_yt_links) to download into memory
+  if (gd.data) {
+    gd.data.forEach(r => { 
+      _cloudCache['@g/' + r.key] = r.value; 
+      
+      // If this is the videos, update the global variable immediately
+      if (r.key === 'bn_yt_links' && typeof window.ytLinks !== 'undefined') {
+        window.ytLinks = r.value;
+      }
+    });
+  }
+  
   if (pf.error) console.error('Profile fetch failed:', pf.error);
   if (pf.data) _cloudProfile = pf.data;
 
@@ -125,20 +137,24 @@ window.ss = function(localKey, value) {
     const cacheKey = m.scope === 'global' ? '@g/' + m.key : m.key;
     _cloudCache[cacheKey] = value;
     
-    // Fire-and-forget push
+    // Immediately update the global variable so it doesn't wait for network
+    if (m.key === 'bn_yt_links' && typeof window.ytLinks !== 'undefined') {
+      window.ytLinks = value;
+    }
+    
+    // Push to Supabase
     if (m.scope === 'global') {
       _pushGlobal(m.key, value).then(() => {
          console.log('Global save successful:', m.key);
       }).catch(err => {
          console.error('Global save FAILED:', err);
-         alert('Database Error: ' + err.message);
+         toast('Database Error: ' + err.message, 'warning');
       });
     }
     else {
       _pushUser(m.key, value).catch(()=>{});
     }
     
-    // Local fallback for offline
     try { localStorage.setItem(localKey, JSON.stringify(value)); } catch {}
   } catch (err) { 
     console.error(err); 
