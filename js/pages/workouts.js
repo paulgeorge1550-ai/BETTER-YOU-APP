@@ -175,9 +175,14 @@ function renderExerciseCardHTML(ex,idx,exs,locked,isCustomPlan){
   const isActive=idx===activeExIdx,isDone=s.done,isFirst=idx===0,isLast=idx===exs.length-1;
   const pct=ex.sets>0?Math.round((s.sets.length/ex.sets)*100):0;
   const setsHtml=ex.sets>0?Array.from({length:ex.sets},(_,i)=>`<button class="sbt${s.sets.includes(i)?' done':''}" onclick="tickSet('${storeKey}',${i},${idx})">${s.sets.includes(i)?ico('check',14):i+1}</button>`).join(''):'';
-// Fallback: If this specific tier has no video, check the beginner version of the same exercise
-const baseId = ex.id.replace(/^[a-z]_/, 'b_'); 
-const ytId = ex.ytId || ytLinks[ex.id] || ytLinks[baseId] || '';
+// 1. Try this exact tier (e.g., i_t2)
+// 2. Fall back to beginner tier of the same exercise (e.g., b_t2)
+// 3. Fall back to professional tier (e.g., p_t2)
+let ytId = ex.ytId || ytLinks[ex.id];
+if (!ytId) {
+  const baseName = ex.id.substring(2); // removes 'i_', 'b_', or 'p_'
+  ytId = ytLinks['b_' + baseName] || ytLinks['i_' + baseName] || ytLinks['p_' + baseName] || '';
+}
  const isAdmin = !!(user && user.isAdmin);
 let videoHtml;
 if(ytId){
