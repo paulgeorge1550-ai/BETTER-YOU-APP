@@ -435,11 +435,11 @@
     </div>
 
     <!-- Today's Session -->
-   <div class="session-card" onclick="startTodayWorkout()"></div>
-     <div class="session-video" id="session-video">
-  <img class="session-video-img" id="session-video-img" alt="" loading="lazy" style="display:none"/>
-  <div class="session-play"><span id="icon-play"></span></div>
-</div>
+    <div class="session-card" onclick="startTodayWorkout()">
+      <div class="session-video" id="session-video">
+        <img class="session-video-img" id="session-video-img" alt="" loading="lazy" style="display:none"/>
+        <div class="session-play"><span id="icon-play"></span></div>
+      </div>
       <div class="session-body">
         <div class="session-meta" id="session-meta">PUSH · 6 EXERCISES · 25 MIN</div>
         <h3 class="session-title" id="session-title">Today's Session</h3>
@@ -662,51 +662,44 @@
           <div class="ast"><div class="asn cnt" data-count="341">0</div><div class="asl">Active Today</div></div>
         </div>
       </div>
+
       <div class="ap" id="panel-ayt">
-  <div class="apt">YouTube Manager</div>
-  
-  <div class="yt-search-row">
-    <input class="yt-search-input" id="yt-search-input" placeholder="Search exercises..." oninput="ytFilterSearch=this.value.toLowerCase(); renderYTList();"/>
-  </div>
+        <div class="apt">YouTube Manager</div>
+        <div class="yt-search-row">
+          <input class="yt-search-input" id="yt-search-input" placeholder="Search exercises..." oninput="ytFilterSearch=this.value.toLowerCase(); renderYTList();"/>
+        </div>
+        
+        <div class="admin-day-nav">
+          <button class="admin-day-btn" onclick="adminShiftDay(-1)">← Prev</button>
+          <select class="admin-day-select" id="admin-day-select" onchange="ytFilterDay = this.value === 'all' ? 'all' : parseInt(this.value, 10); renderYTList();">
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+            <option value="all">All Days</option>
+          </select>
+          <button class="admin-day-btn" onclick="adminShiftDay(1)">Next →</button>
+        </div>
 
-  <!-- NEW: Day Selector Bar -->
-  <div class="admin-day-nav">
-    <button class="admin-day-btn" onclick="adminShiftDay(-1)">← Prev</button>
-    <select class="admin-day-select" id="admin-day-select" onchange="ytFilterDay = parseInt(this.value, 10); renderYTList();">
-      <option value="0">Sunday</option>
-      <option value="1">Monday</option>
-      <option value="2">Tuesday</option>
-      <option value="3">Wednesday</option>
-      <option value="4">Thursday</option>
-      <option value="5">Friday</option>
-      <option value="6">Saturday</option>
-      <option value="all">All Days</option>
-    </select>
-    <button class="admin-day-btn" onclick="adminShiftDay(1)">Next →</button>
-  </div>
-
-  <div class="tier-filter">
-    <button class="tf-btn on" onclick="filterYTTier('all',this)">All Tiers</button>
-    <button class="tf-btn" onclick="filterYTTier('beginner',this)">Beginner</button>
-    <button class="tf-btn" onclick="filterYTTier('intermediate',this)">Intermediate</button>
-    <button class="tf-btn" onclick="filterYTTier('professional',this)">Professional</button>
-  </div>
-  <div id="yt-manager-list"></div>
-</div>
-    
         <div class="tier-filter">
           <button class="tf-btn on" onclick="filterYTTier('all',this)">All Tiers</button>
           <button class="tf-btn" onclick="filterYTTier('beginner',this)">Beginner</button>
           <button class="tf-btn" onclick="filterYTTier('intermediate',this)">Intermediate</button>
           <button class="tf-btn" onclick="filterYTTier('professional',this)">Professional</button>
         </div>
+        
         <div id="yt-manager-list"></div>
       </div>
+
       <div class="ap" id="panel-apublic">
         <div class="apt">Public Exercise Library</div>
         <p style="font-size:13px;color:var(--txt2);font-weight:400;margin-bottom:20px;line-height:1.7">User-created exercises you can push to the community library.</p>
         <div class="afc"><div id="admin-public-list"></div></div>
       </div>
+
       <div class="ap" id="panel-ausers">
         <div class="apt">User Management</div>
         <div class="afc"><table class="atb"><thead><tr><th>Name</th><th>Email</th><th>Status</th></tr></thead><tbody id="admin-users-tb"></tbody></table></div>
